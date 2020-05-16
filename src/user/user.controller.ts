@@ -9,6 +9,7 @@ export class UserController {
     @Post()
     async login(@Body() loginDto: LoginDto) {
         const user = await this.userService.findUserByEmailAndPassword(loginDto);
+        console.log(user);
         return user;
     }
 }
