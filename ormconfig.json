@@ -3,7 +3,7 @@
   "host": "localhost",
   "port": 3306,
   "username": "root",
-  "password": "ponTuClaveAqui",
+  "password": "outeda20",
   "database": "wave",
   "entities": [
       "dist/**/*.entity{.ts,.js}"
