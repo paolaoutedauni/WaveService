@@ -19,7 +19,6 @@ export class UserService {
       }
 
       findByEmailAndPassword({email, password}: {email: string, password: string}): Promise<User> {
-        console.log(email, password);
         return this.usersRepository.findOne({ where: { email, password } });
       }
 }
