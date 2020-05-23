@@ -1,10 +1,10 @@
-import { Entity, Column } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class FavoriteCategory{
     @Column()
     email: string;
 
-    @Column()
+    @PrimaryGeneratedColumn()
     idCategory: number;
 }
