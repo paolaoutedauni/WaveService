@@ -11,7 +11,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
         lastName: 'Outeda',
         userName: 'paolaouteda',
         email: 'paolaouteda@gmail.com',
-        password: '2fb54875d166ab45a6a8b21f1631dec573a8cf07',
+        password: '8b959c05562f6b3f925b957b1984960049d35983',
         birthday: '1995-08-09 23:59:59',
         isActive: 1,
       })
