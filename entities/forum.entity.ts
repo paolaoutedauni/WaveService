@@ -1,15 +1,19 @@
-import { PrimaryGeneratedColumn,Column,Entity } from "typeorm";
+import { PrimaryGeneratedColumn,Column,Entity, OneToMany, JoinColumn, OneToOne } from "typeorm";
+import { Category } from "./category.entity";
+import { Subcategory } from "./subCategory.entity";
 
 @Entity()
 export class Forum {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
-    idCategory: number;
+    @OneToOne(() => Category)
+    @JoinColumn()
+    category: Category;
 
-    @Column()
-    idSubcategory: number;
+    @OneToOne(() => Subcategory)
+    @JoinColumn()
+    subCategory: Subcategory;
 
     @Column()
     title: string;

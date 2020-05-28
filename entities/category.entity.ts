@@ -15,7 +15,7 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToOne(() => Color)
+  @OneToOne(() => Color, color => color.id)
   @JoinColumn()
-  color: Color;
+  idColor: Color;
 }

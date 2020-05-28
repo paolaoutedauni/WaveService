@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, TableForeignKey, OneToOne, JoinColumn } from 'typeorm';
+import { Category } from './category.entity';
 
 @Entity()
 export class Subcategory {
@@ -8,7 +9,8 @@ export class Subcategory {
   @Column()
   name: string;
 
-  @Column()
-  idCategory: number;
+  @OneToOne(() => Category)
+  @JoinColumn()
+  Category: Category;
 
 }
