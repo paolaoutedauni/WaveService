@@ -1,17 +1,19 @@
-import { PrimaryGeneratedColumn, Column, Entity, OneToOne, JoinColumn } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, OneToOne, JoinColumn, PrimaryColumn, ManyToOne } from "typeorm";
 import { Category } from "./category.entity";
-import { Subcategory } from "./subCategory.entity";
+import { Subcategory } from "./subcategory.entity";
 
 @Entity()
 export class ContentSubcategory{
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => Category)
+    @ManyToOne(type => Category, category => category.contentSubcategories)
+    @PrimaryColumn()
     @JoinColumn()
     category: Category;
 
-    @OneToOne(() => Subcategory)
+    @ManyToOne(type => Subcategory, subcategory => subcategory.contentSubcategories)
+    @PrimaryColumn()
     @JoinColumn()
     subcategory: Subcategory;
 

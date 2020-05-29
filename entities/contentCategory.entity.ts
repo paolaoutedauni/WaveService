@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, PrimaryColumn, ManyToOne } from 'typeorm';
 import { Category } from './category.entity';
 
 @Entity()
@@ -6,7 +6,8 @@ export class ContentCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => Category)
+  @ManyToOne(type => Category, category => category.contentCategories)
+  @PrimaryColumn()
   @JoinColumn()
   category: Category;
 
