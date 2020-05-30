@@ -1,4 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, PrimaryColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  PrimaryColumn,
+  ManyToOne,
+} from 'typeorm';
 import { Category } from './category.entity';
 
 @Entity()
@@ -6,9 +14,10 @@ export class ContentCategory {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(type => Category, category => category.contentCategories)
-  @PrimaryColumn()
-  @JoinColumn()
+  @ManyToOne(
+    type => Category,
+    category => category.contentCategories,
+  )
   category: Category;
 
   @Column()
@@ -22,5 +31,4 @@ export class ContentCategory {
 
   @Column()
   link: string;
-
 }

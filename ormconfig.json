@@ -3,12 +3,13 @@
   "host": "localhost",
   "port": 3306,
   "username": "root",
-  "password": "freddy9824",
+  "password": "outeda20",
   "database": "wave",
   "entities": ["dist/**/*.entity.js"],
-  "synchronize": true,
+  "synchronize": false,
   "migrations": ["dist/migration/**/*.js"],
   "cli": {
     "migrationsDir": "migration/"
-  }
+  },
+  "logging": true
 }

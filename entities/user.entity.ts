@@ -1,17 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
 import { Post } from './post.entity';
 
 export enum userRole {
-  ADMIN= "admin",
-  NORMAL= "normal",
-  PREMIUM= "premium"
+  ADMIN = 'admin',
+  NORMAL = 'normal',
+  PREMIUM = 'premium',
 }
-
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryColumn()
+  email: string;
 
   @Column()
   firstName: string;
@@ -19,11 +18,8 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ unique: true })
   userName: string;
-
-  @Column()
-  email: string;
 
   @Column()
   password: string;
@@ -35,12 +31,15 @@ export class User {
   isActive: boolean;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: userRole,
-    default: userRole.NORMAL
+    default: userRole.NORMAL,
   })
-  role: userRole
+  role: userRole;
 
-  @OneToMany(type => Post, post => post.user)
+  @OneToMany(
+    type => Post,
+    post => post.user,
+  )
   posts: Post[];
 }

@@ -9,11 +9,8 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Color } from './color.entity';
-import { Subcategory } from './subcategory.entity';
-import { Forum } from './forum.entity';
+import { Subcategory } from './subCategory.entity';
 import { ContentCategory } from './contentCategory.entity';
-import { ContentSubcategory } from './contentSubcategory.entity';
-import { Post } from './post.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -24,24 +21,21 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToOne(() => Color, color => color.id)
+  @OneToOne(() => Color)
   @JoinColumn()
-  idColor: Color;
+  color: Color;
 
-  @OneToMany(type => Forum, forum=> forum.category)
-  forums: Forum[];
-
-  @OneToMany(type => Subcategory, subcategory => subcategory.category)
+  @OneToMany(
+    type => Subcategory,
+    subcategory => subcategory.category,
+  )
   subcategories: Subcategory[];
 
-  @OneToMany(type => ContentCategory, contentCategory => contentCategory.category)
+  @OneToMany(
+    type => ContentCategory,
+    contentCategory => contentCategory.category,
+  )
   contentCategories: ContentCategory[];
-
-  @OneToMany(type => ContentSubcategory, contentSubcategory => contentSubcategory.category)
-  contentSubcategories: ContentSubcategory[];
-
-  @OneToMany(type => Post, post=> post.subcategory)
-  posts: Post[]
 
   @ManyToMany(type => User) //Categorias favoritas
   @JoinTable()
