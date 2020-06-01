@@ -142,6 +142,28 @@ export class FillingUsers1590266082384 implements MigrationInterface {
         birthday: '1995-08-09 23:59:59',
       })
       .execute();
+
+    await queryRunner.query(`INSERT INTO wave.color (color) VALUES ('azul');`);
+    await queryRunner.query(`INSERT INTO wave.color (color) VALUES ('verde');`);
+
+    await queryRunner.query(
+      `INSERT INTO wave.category (name, colorId) VALUES ('Películas', '1');`,
+    );
+
+    await queryRunner.query(
+      `INSERT INTO wave.category (name, colorId) VALUES ('Libros', '2');`,
+    );
+    await queryRunner.query(
+      `INSERT INTO wave.sub_category (name, categoryId) VALUES ('Harry Potter', '1');`,
+    );
+    await queryRunner.query(`INSERT INTO wave.sub_category (name, categoryId) VALUES ('Misterio', '2');
+      `);
+    await queryRunner.query(`INSERT INTO wave.forum (title, subCategoryId) VALUES ('Hermione is the best', '1');
+      `);
+    await queryRunner.query(`INSERT INTO wave.forum (title, subCategoryId) VALUES ('El profesor de john katzenbach', '2');
+      `);
+    await queryRunner.query(`INSERT INTO wave.category_users_user (categoryId, userEmail) VALUES ('1', 'paolaouteda@gmail.com');
+      `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
