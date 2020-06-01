@@ -10,7 +10,11 @@ export class ForumService {
     private forumsRepository: Repository<Forum>,
   ) {}
 
+  findAll(): Promise<Forum[]> {
+    return this.forumsRepository.find();
+  }
+
   findAllBySubCategory(id: number): Promise<Forum[]> {
-    return this.forumsRepository.find({ where: { subcategory: id } });
+    return this.forumsRepository.find({ where: { subCategory: id } });
   }
 }

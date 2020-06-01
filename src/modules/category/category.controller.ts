@@ -1,6 +1,7 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards, Param, Request } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from 'entities/user.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -10,5 +11,13 @@ export class CategoryController {
   @Get('all')
   async findAll() {
     return { categories: await this.categoryService.findAll() };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('favorites')
+  async findByUser(@Request() { user }: { user: User }) {
+    return {
+      categories: await this.categoryService.findByUser(user.email),
+    };
   }
 }

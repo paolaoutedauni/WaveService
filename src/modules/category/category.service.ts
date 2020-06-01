@@ -15,4 +15,13 @@ export class CategoryService {
       relations: ['color', 'contentCategories'],
     });
   }
+
+  findByUser(email: string): Promise<Category[]> {
+    return this.categoriesRepository
+      .createQueryBuilder('category')
+      .innerJoin('category.users', 'user', 'user.email IN (:userEmail)', {
+        userEmail: email,
+      })
+      .getMany();
+  }
 }

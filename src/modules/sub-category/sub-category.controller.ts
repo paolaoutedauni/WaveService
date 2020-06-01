@@ -8,7 +8,7 @@ export class SubCategoryController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('category/:id')
-  async findAll(@Param() params) {
+  async findByCategory(@Param() params) {
     return {
       subCategories: await this.subCategoryService.findAllByCategory(params.id),
     };

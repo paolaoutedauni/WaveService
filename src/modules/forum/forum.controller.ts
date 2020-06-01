@@ -7,8 +7,14 @@ export class ForumController {
   constructor(private forumService: ForumService) {}
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('all')
+  async findAll() {
+    return { forums: await this.forumService.findAll() };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get('subcategory/:id')
-  async findAll(@Param() params) {
+  async findBySubcategory(@Param() params) {
     return { forums: await this.forumService.findAllBySubCategory(params.id) };
   }
 }
