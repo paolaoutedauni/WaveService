@@ -11,6 +11,9 @@ export class SubCategoryService {
   ) {}
 
   findAllByCategory(id: number): Promise<SubCategory[]> {
-    return this.subCategoriesRepository.find({ where: { category: id } });
+    return this.subCategoriesRepository.find({
+      where: { category: id },
+      relations: ['contentSubcategories'],
+    });
   }
 }

@@ -11,6 +11,8 @@ export class CategoryService {
   ) {}
 
   findAll(): Promise<Category[]> {
-    return this.categoriesRepository.find({ relations: ['color'] });
+    return this.categoriesRepository.find({
+      relations: ['color', 'contentCategories'],
+    });
   }
 }
