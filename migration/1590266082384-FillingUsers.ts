@@ -49,7 +49,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
   `);
 
-    await queryRunner.query(`CREATE TABLE  subcategory  (
+    await queryRunner.query(`CREATE TABLE  sub_category  (
      id  int NOT NULL AUTO_INCREMENT,
      name  varchar(255) NOT NULL,
      categoryId  int DEFAULT NULL,
@@ -60,26 +60,26 @@ export class FillingUsers1590266082384 implements MigrationInterface {
   `);
 
     await queryRunner.query(`CREATE TABLE content_subcategory (
-    id int NOT NULL AUTO_INCREMENT,
-    title varchar(255) NOT NULL,
-    imagen varchar(255) NOT NULL,
-    text varchar(255) NOT NULL,
-    link varchar(255) NOT NULL,
-    subcategoryId int DEFAULT NULL,
-    PRIMARY KEY (id),
-    KEY FK_ea4eeba180f39b0f5e0d142e2ec (subcategoryId),
-    CONSTRAINT FK_ea4eeba180f39b0f5e0d142e2ec FOREIGN KEY (subcategoryId) REFERENCES subcategory (id)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+      id int NOT NULL AUTO_INCREMENT,
+      title varchar(255) NOT NULL,
+      imagen varchar(255) NOT NULL,
+      text varchar(255) NOT NULL,
+      link varchar(255) NOT NULL,
+      subCategoryId int DEFAULT NULL,
+      PRIMARY KEY (id),
+      KEY FK_74a238fdd935df699916df472f5 (subCategoryId),
+      CONSTRAINT FK_74a238fdd935df699916df472f5 FOREIGN KEY (subCategoryId) REFERENCES sub_category (id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
   `);
 
     await queryRunner.query(`CREATE TABLE forum (
-    id int NOT NULL AUTO_INCREMENT,
-    title varchar(255) NOT NULL,
-    subcategoryId int DEFAULT NULL,
-    PRIMARY KEY (id),
-    KEY FK_0d81ec41cf0ba5a1ba5199ec86d (subcategoryId),
-    CONSTRAINT FK_0d81ec41cf0ba5a1ba5199ec86d FOREIGN KEY (subcategoryId) REFERENCES subcategory (id)
-  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+      id int NOT NULL AUTO_INCREMENT,
+      title varchar(255) NOT NULL,
+      subCategoryId int DEFAULT NULL,
+      PRIMARY KEY (id),
+      KEY FK_83186d94550346daa2dd7986add (subCategoryId),
+      CONSTRAINT FK_83186d94550346daa2dd7986add FOREIGN KEY (subCategoryId) REFERENCES sub_category (id)
+    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
   `);
 
     await queryRunner.query(`CREATE TABLE post (
@@ -142,6 +142,28 @@ export class FillingUsers1590266082384 implements MigrationInterface {
         birthday: '1995-08-09 23:59:59',
       })
       .execute();
+
+    await queryRunner.query(`INSERT INTO wave.color (color) VALUES ('azul');`);
+    await queryRunner.query(`INSERT INTO wave.color (color) VALUES ('verde');`);
+
+    await queryRunner.query(
+      `INSERT INTO wave.category (name, colorId) VALUES ('Películas', '1');`,
+    );
+
+    await queryRunner.query(
+      `INSERT INTO wave.category (name, colorId) VALUES ('Libros', '2');`,
+    );
+    await queryRunner.query(
+      `INSERT INTO wave.sub_category (name, categoryId) VALUES ('Harry Potter', '1');`,
+    );
+    await queryRunner.query(`INSERT INTO wave.sub_category (name, categoryId) VALUES ('Misterio', '2');
+      `);
+    await queryRunner.query(`INSERT INTO wave.forum (title, subCategoryId) VALUES ('Hermione is the best', '1');
+      `);
+    await queryRunner.query(`INSERT INTO wave.forum (title, subCategoryId) VALUES ('El profesor de john katzenbach', '2');
+      `);
+    await queryRunner.query(`INSERT INTO wave.category_users_user (categoryId, userEmail) VALUES ('1', 'paolaouteda@gmail.com');
+      `);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
