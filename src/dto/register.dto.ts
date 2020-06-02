@@ -3,8 +3,10 @@ import { IsDate, IsEmail, IsNotEmpty, Length, IsBoolean, } from 'class-validator
 export class RegisterDto {
   @IsNotEmpty()
   firstName: string;
+
   @IsNotEmpty()
   lastName: string;
+
   @IsNotEmpty()
   userName: string;
 
