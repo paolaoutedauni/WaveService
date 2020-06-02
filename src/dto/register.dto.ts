@@ -19,6 +19,5 @@ export class RegisterDto {
   @IsDate()
   birthday: string;
   
-  @IsNotEmpty()
   role: userRole;
 }
