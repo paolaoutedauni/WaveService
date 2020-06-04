@@ -12,6 +12,7 @@ export class User {
     password,
     birthday,
     role,
+    isActive,
     imagen,
   }: {
     firstName?: string;
@@ -22,6 +23,7 @@ export class User {
     birthday?: Date;
     role?: userRole;
     imagen?: Blob;
+    isActive?: boolean;
   } = {}) {
     (this.firstName = firstName),
       (this.lastName = lastName),
@@ -31,6 +33,7 @@ export class User {
       (this.birthday = birthday),
       (this.role = role),
       (this.imagen = imagen);
+      (this.isActive = isActive)
   }
 
   @PrimaryColumn()
@@ -60,6 +63,9 @@ export class User {
     default: userRole.NORMAL,
   })
   role: userRole;
+
+  @Column({default: true})
+  isActive: boolean
 
   @OneToMany(
     type => Post,

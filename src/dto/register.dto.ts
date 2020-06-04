@@ -21,5 +21,7 @@ export class RegisterDto {
   
   imagen: Blob;
 
+  isActive: boolean;
+
   role: userRole;
 }
