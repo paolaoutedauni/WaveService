@@ -19,5 +19,7 @@ export class RegisterDto {
   @IsNotEmpty()
   birthday: string;
   
+  imagen: Blob;
+
   role: userRole;
 }

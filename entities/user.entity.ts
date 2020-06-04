@@ -12,7 +12,7 @@ export class User {
     password,
     birthday,
     role,
-    isActive,
+    imagen,
   }: {
     firstName?: string;
     lastName?: string;
@@ -21,7 +21,7 @@ export class User {
     password?: string;
     birthday?: Date;
     role?: userRole;
-    isActive?: boolean;
+    imagen?: Blob;
   } = {}) {
     (this.firstName = firstName),
       (this.lastName = lastName),
@@ -30,7 +30,7 @@ export class User {
       (this.password = password),
       (this.birthday = birthday),
       (this.role = role),
-      (this.isActive = isActive);
+      (this.imagen = imagen);
   }
 
   @PrimaryColumn()
@@ -51,8 +51,8 @@ export class User {
   @Column()
   birthday: Date;
 
-  @Column({ default: true })
-  isActive: boolean;
+  @Column()
+  imagen: Blob;
 
   @Column({
     type: 'enum',
