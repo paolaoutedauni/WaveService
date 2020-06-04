@@ -21,7 +21,6 @@ export class User {
     password?: string;
     birthday?: Date;
     role?: userRole;
-    imagen?: Blob;
     isActive?: boolean;
   } = {}) {
     (this.firstName = firstName),
