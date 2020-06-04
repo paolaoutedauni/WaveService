@@ -21,6 +21,7 @@ export class User {
     password?: string;
     birthday?: Date;
     role?: userRole;
+    imagen?: Blob;
     isActive?: boolean;
   } = {}) {
     (this.firstName = firstName),
@@ -29,7 +30,7 @@ export class User {
       (this.email = email),
       (this.password = password),
       (this.birthday = birthday),
-      (this.role = role)
+      (this.role = role),
       (this.isActive = isActive)
   }
 
