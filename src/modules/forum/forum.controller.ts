@@ -20,10 +20,13 @@ export class ForumController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('favorites')
-  async findByUser(@Request() { user }: { user: User }) {
+  @Get('favorites/sub-category/:id')
+  async findByUserAndSubCategory(
+    @Request() { user }: { user: User },
+    @Param('id') id,
+  ) {
     return {
-      forums: await this.forumService.findByUser(user.email),
+      forums: await this.forumService.findByUserAndSubCategory(user.email, id),
     };
   }
 

@@ -22,12 +22,16 @@ export class ForumService {
     return this.forumsRepository.findOne(id);
   }
 
-  findByUser(email: string): Promise<Forum[]> {
+  findByUserAndSubCategory(
+    email: string,
+    subCategoryId: number,
+  ): Promise<Forum[]> {
     return this.forumsRepository
       .createQueryBuilder('forum')
       .innerJoin('forum.users', 'user', 'user.email IN (:userEmail)', {
         userEmail: email,
       })
+      .where({ where: { subCategory: subCategoryId } })
       .getMany();
   }
 }
