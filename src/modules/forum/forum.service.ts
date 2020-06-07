@@ -18,7 +18,16 @@ export class ForumService {
     return this.forumsRepository.find({ where: { subCategory: id } });
   }
 
-  findById(id:number): Promise<Forum>{
-    return this.forumsRepository.findOne(id)
+  findById(id: number): Promise<Forum> {
+    return this.forumsRepository.findOne(id);
+  }
+
+  findByUser(email: string): Promise<Forum[]> {
+    return this.forumsRepository
+      .createQueryBuilder('forum')
+      .innerJoin('forum.users', 'user', 'user.email IN (:userEmail)', {
+        userEmail: email,
+      })
+      .getMany();
   }
 }
