@@ -175,7 +175,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
     );
 
     await queryRunner.query(
-      `INSERT INTO wave.content_category (id ,title ,imagen ,text ,link ,categoryId) VALUES ('2', 'Peliculas en 1080p', 'https://i.pinimg.com/564x/03/46/70/0346709bef8e1c572371eefe7f5602ad.jpg', 'Revive y comparte tus momentos preferidos de tu top de peliculas favoritas y no te pierdas esta pagina donde podras conseguir tus peliculas en una buena calidad', 'https://cuevana3.io/', '1');`,
+      `INSERT INTO wave.content_category (id ,title ,imagen ,text ,link ,categoryId) VALUES ('2', 'Peliculas en 1080p', 'https://cdnmundo1.img.sputniknews.com/img/106290/75/1062907509_0:185:1024:738_1000x541_80_0_0_e7a171cb66555c14c2cb282c9eb61f48.jpg', 'Revive y comparte tus momentos preferidos de tu top de peliculas favoritas y no te pierdas esta pagina donde podras conseguir tus peliculas en una buena calidad', 'https://cuevana3.io/', '1');`,
     );
 
     await queryRunner.query(
