@@ -25,6 +25,6 @@ export class CategoryService {
   }
 
   findById(id: number): Promise<Category> {
-    return this.categoriesRepository.findOne(id);
+    return this.categoriesRepository.findOne(id, {relations:['color', 'contentCategories']});
   }
 }
