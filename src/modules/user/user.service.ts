@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { User } from 'entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { RegisterDto } from '../../dto/register.dto';
+import axios, { AxiosResponse } from 'axios';
+
+import FormData = require('form-data');
 
 @Injectable()
 export class UserService {
@@ -35,5 +37,17 @@ export class UserService {
 
   createUser(userRegister: User): Promise<User> {
     return this.usersRepository.save(userRegister);
+  }
+
+  uploadImage(image: string): Promise<AxiosResponse> {
+    const formData = new FormData();
+    formData.append('image', image);
+    return axios({
+      method: 'post',
+      url:
+        'https://api.imgbb.com/1/upload?key=96370f6b88cfde1ea6a16a5d0d13bb0f',
+      data: formData,
+      headers: { ...formData.getHeaders() },
+    }).catch(err => err);
   }
 }
