@@ -46,7 +46,7 @@ export class UserController {
     }
   }
 
-  @Post('profile/upload')
+  @Post('profile/photo/upload')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Request() { user }: { user: User }) {
@@ -54,6 +54,7 @@ export class UserController {
     const response = await this.userService.uploadImage(
       fileBuffer.toString('base64'),
     );
+    await this.userService.saveProfilePhoto(user, response.data.data.url);
     return { imageUrl: response.data.data.url };
   }
 

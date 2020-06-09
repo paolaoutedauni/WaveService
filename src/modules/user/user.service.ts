@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ObjectID, UpdateResult } from 'typeorm';
 import axios, { AxiosResponse } from 'axios';
 
 import FormData = require('form-data');
@@ -37,6 +37,17 @@ export class UserService {
 
   createUser(userRegister: User): Promise<User> {
     return this.usersRepository.save(userRegister);
+  }
+
+  saveProfilePhoto(user: User, url: string): Promise<UpdateResult> {
+    return this.usersRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({
+        image: url,
+      })
+      .where('email = :email', { email: user.email })
+      .execute();
   }
 
   uploadImage(image: string): Promise<AxiosResponse> {
