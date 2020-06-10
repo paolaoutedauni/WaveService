@@ -515,7 +515,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
 
     await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('16', 'Reggaeton', 'https://i.pinimg.com/originals/9c/3e/f0/9c3ef07409bb58f14401aa5e1efc4cef.png', '¿?', 'http://www.minhaplaylist.com/playlist/412/top-10-canciones-de-reggaeton-musica-nueva-de-reggaeton', '16');`)
 
-    await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('15', 'Bebidas', 'https://bucket3.glanacion.com/anexos/fotos/86/2534586w380.jpg', '¿?, 'https://todofiestaonline.com/ideas/tragos-para-fiestas-de-adultos-preparacion-paso-a-paso/', '15');`)
+    await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('15', 'Bebidas', 'https://bucket3.glanacion.com/anexos/fotos/86/2534586w380.jpg', '¿?', 'https://todofiestaonline.com/ideas/tragos-para-fiestas-de-adultos-preparacion-paso-a-paso/', '15');`)
 
     await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('14', 'Confesiones', 'https://c8.alamy.com/compes/ppfcm6/personas-hablando-avatar-ppfcm6.jpg', '¿?', 'https://www.recreoviral.com/risa/tuits-fiestas-corporativas-desastre-seguro/', '14');`)
 
