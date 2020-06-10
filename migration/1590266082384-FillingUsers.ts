@@ -409,7 +409,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
 
     await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('22', '¿Saldra la 2da temporada de High School of the Dead?', '9');`)
 
-    await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('21', '¿Con cual se divirtieron más Mazinger Z o Medabots', '8');`)
+    await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('21', '¿Con cual se divirtieron más Mazinger Z o Medabots?', '8');`)
 
     await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('20', '¿Creen que veremos volar una vez a Astroboy?', '8');`)
 
@@ -439,15 +439,15 @@ export class FillingUsers1590266082384 implements MigrationInterface {
 
     await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('7', 'Limbo un juego para no dormir ', '4');`)
 
-    await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('6', '¿Cual ha sido la mejor Kill que has hecho en Fornite', '3');`)
+    await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('6', '¿Cual ha sido la mejor Kill que has hecho en Fornite?', '3');`)
 
     await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('5', 'Gta V el mejor de la saga', '3');`)
 
     await queryRunner.query(`INSERT INTO wave.forum (id, title, subCategoryId) VALUES ('4', '¿Destiny o Halo? ', '3');`)
     
-    await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('3', 'El lugar ideal para un Gamer', 'https://api.imgbb.com/1/upload?key=96370f6b88cfde1ea6a16a5d0d13bb0f', 'Descubre secretos de tus videojuegos favoritos y comparte la experiencia mientras jugabas', 'https://www.3djuegos.com/', '3');`)
+    await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('3', 'El lugar ideal para un Gamer', 'https://image.freepik.com/vector-gratis/bandera-estilo-neon-consola-comunitaria-gamepad-fondo-ladrillo_1262-13411.jpg', 'Descubre secretos de tus videojuegos favoritos y comparte la experiencia mientras jugabas', 'https://www.3djuegos.com/', '3');`)
 
-    await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('4', 'Rompe el Sello y cruza al portal del anime ', 'http://www.v3wall.com/wallpaper/1920_1080/1204/1920_1080_20120418033308299305.jpg', 'Aprende y comparte más sobre tu anime favorito', 'https://animeblix.com/', '4');`)
+    await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('4', 'Rompe el Sello y cruza al portal del anime ', 'https://images3.alphacoders.com/975/975939.jpg', 'Aprende y comparte más sobre tu anime favorito', 'https://animeblix.com/', '4');`)
 
     await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('5', 'Proyecto X', 'https://media.istockphoto.com/photos/blue-disco-background-picture-id466083160?k=6&m=466083160&s=612x612&w=0&h=lJh_OZHfTrYuJ4HrUALM29RiwdjLG9OOya76SPLqucg=', 'La vida es mejor cuando rumbiamos con los amigos, ven y cuentanos tus experiencias', 'https://Rumba.com', '5');`)
 
@@ -455,7 +455,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
 
     await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('7', 'Recetas Cocina', 'https://p4.wallpaperbetter.com/wallpaper/899/593/118/cuisine-food-india-indian-wallpaper-preview.jpg', 'Prepara las mejores recetas de cocina y comparte tus platillos favoritos', ' ', '7');`)
 
-    await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('8', 'Bienvenido Atleta', 'https://lh3.googleusercontent.com/proxy/dBeTLRyltnDvciE9HlSGllt31fcVJ_5iHCFrg222obVvP1PM3zBJNpxJXgFlNf3w8xgezcapx86pX3oVOdTlkwC8WhIwt8esCdNsZzQta4yOCPPupAT7hkTMYS15s9Sw3UUxpdUsjVzC', 'Revive tus momentos favoritos y sigue entrenando para alcanzar el nivel de tu atleta favorito', 'https://www.scoreboard.com/es/', '8');`)
+    await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('8', 'Bienvenido Atleta', 'https://p4.wallpaperbetter.com/wallpaper/80/586/466/workout-training-man-sport-wallpaper-19c0f8cd41ba1dfb56b7a8df5041164d.jpg', 'Revive tus momentos favoritos y sigue entrenando para alcanzar el nivel de tu atleta favorito', 'https://www.scoreboard.com/es/', '8');`)
 
     await queryRunner.query(`INSERT INTO wave.content_category (id, title, imagen, text, link, categoryId) VALUES ('9', 'Computer Science', 'https://cdn.computerhoy.com/sites/navi.axelspringer.es/public/styles/480/public/media/image/2019/08/programacion.jpg?itok=Byt2swb3', 'Domina los conocimientos sobre este tema entrando a nuestros foros, y aprovecha de compartir tus conocimientos', 'https://es.coursera.org/browse/computer-science', '9');`)
 
@@ -471,7 +471,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
 
     await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('8', 'Mecha (Robots Gigantes)', 'https://pm1.narvii.com/6857/2129b3f9c22693f01520814bc69397bb120cb108v2_00.jpg', '¿Crees que todo se quedo en Mazinger Z?, pues no es así, aquí conoce un poco más sobre el mundo mecha', 'https://www.vix.com/es/series/218995/los-7-mejores-animes-de-mecha-de-la-historia-que-debes-ver-si-eres-fan-no-son-mazinger-z', '8');`)
 
-    await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('7', 'Shonen (Adolecente)', 'https://pulpfictioncine.com/download/multimedia.normal.a59a6e98beabfce4.73686f6e656e206a756d705f6e6f726d616c2e6a7067.jpg', 'Imaginate vivir en tu Shonen favorito, ¿lo hiciste?, ven animate a compartir la experiencia de tus shonen favoritos', 'https://www.lavanguardia.com/cribeo/cultura/20131206/47295030343/los-mejores-animes-shonen-de-la-historia.html', '7');`)
+    await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('7', 'Shonen (Adolescente)', 'https://pulpfictioncine.com/download/multimedia.normal.a59a6e98beabfce4.73686f6e656e206a756d705f6e6f726d616c2e6a7067.jpg', 'Imaginate vivir en tu Shonen favorito, ¿lo hiciste?, ven animate a compartir la experiencia de tus shonen favoritos', 'https://www.lavanguardia.com/cribeo/cultura/20131206/47295030343/los-mejores-animes-shonen-de-la-historia.html', '7');`)
 
     await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('6', 'Toma las riendas de la aventura', 'https://i.pinimg.com/originals/31/9f/75/319f7570ce5ee95b8c179bac3f5d0577.jpg', 'Adentrate y conversa sobre esas aventuras que quedaron marcadas en tu vida', 'https://as.com/meristation/juegos/top/videojuegos_aventura/', '6');`)
 
@@ -481,7 +481,7 @@ export class FillingUsers1590266082384 implements MigrationInterface {
 
     await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('4', 'Plataforma', 'https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/styles/1200/public/media/image/2016/08/caratula-super-mario-galaxy.jpg?itok=L_fBWgjn', '¿?', 'https://vandal.elespanol.com/rankings/pc/plataformas', '4');`)
 
-    await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('3', 'Shooter', ' https://i.pinimg.com/originals/fb/0d/4e/fb0d4e4bebc7b221aa3c03091766d4e2.jpg', '¿?', 'https://vandal.elespanol.com/rankings/pc/shooter', '3');`)
+    await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('3', 'Shooter', 'https://i.pinimg.com/originals/fb/0d/4e/fb0d4e4bebc7b221aa3c03091766d4e2.jpg', '¿?', 'https://vandal.elespanol.com/rankings/pc/shooter', '3');`)
 
     await queryRunner.query(`INSERT INTO wave.content_subcategory (id, title, imagen, text, link, subCategoryId) VALUES ('31', 'Data Structures', 'https://i.pinimg.com/236x/8b/b7/3c/8bb73c93deda5392842740ca2c0e02a9--light-art-installation-art-installations.jpg', '¿?', 'https://www.geeksforgeeks.org/data-structures/', '31');`)
 
