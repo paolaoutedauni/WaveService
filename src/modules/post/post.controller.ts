@@ -14,6 +14,13 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('latest/:id')
+  async findLatestPosts(@Param('id') id: number) {
+    const posts = await this.postService.findLatestPosts(id);
+    return { posts };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Post('publish')
   async createPost(@Body() body: any) {
     this.postService.createPost(body);

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { Post } from 'entities/post.entity';
 
 @Injectable()
@@ -19,5 +19,11 @@ export class PostService {
 
   createPost(post: any): Promise<Post> {
     return this.postsRepository.save(post);
+  }
+
+  findLatestPosts(id: number): Promise<Post[]> {
+    return this.postsRepository.find({
+      where: { id: MoreThan(id) },
+    });
   }
 }
