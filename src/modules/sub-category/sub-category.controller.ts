@@ -56,6 +56,6 @@ export class SubCategoryController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findById(@Param('id') id: number) {
-    return this.subCategoryService.findById(id);
+    return await this.subCategoryService.findById(id);
   }
 }
