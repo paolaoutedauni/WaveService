@@ -5,14 +5,25 @@ import {
   Param,
   Request,
   Patch,
+  Post,
+  Body,
+  HttpException,
+  HttpStatus,
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ForumService } from './forum.service';
 import { User } from 'entities/user.entity';
+import { ForumDto } from 'src/dto/forum.dto';
+import { Forum } from 'entities/forum.entity';
+import { SubCategoryService } from '../sub-category/sub-category.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import fs = require('fs');
 
 @Controller('forum')
 export class ForumController {
-  constructor(private forumService: ForumService) {}
+  constructor(private forumService: ForumService, private subCategoryService: SubCategoryService) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get('all')
@@ -77,5 +88,34 @@ export class ForumController {
   @Get(':id')
   async findById(@Param('id') id: number) {
     return { forum: await this.forumService.findById(id) };
+  }
+
+  @Post('photo/upload/:id')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file, @Param('id') id:number ) {
+    const fileBuffer = fs.readFileSync(file.path);
+    const response = await this.forumService.uploadImage(
+      fileBuffer.toString('base64'),
+    );
+    await this.forumService.saveProfilePhoto( id , response.data.data.url);
+    return { imageUrl: response.data.data.url };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('create')
+  async createForum(@Body() body: ForumDto) {
+    const subCate = await this.subCategoryService.findById(body.subCategoryId);
+    if (subCate) {
+      const forum: Forum = new Forum({...body, subCategory: subCate})
+      await this.forumService.saveForum(forum)
+      return "Algo bonito"
+    }
+    else {
+      throw new HttpException(
+        'El email o username ya se encuentra registrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
   }
 }

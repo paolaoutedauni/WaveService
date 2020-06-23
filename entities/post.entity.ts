@@ -11,7 +11,13 @@ import { User } from './user.entity';
 import { Forum } from './forum.entity';
 
 @Entity()
-export class Post {
+export class PostPag {
+  constructor({text, forum, user} : {text?: string, forum?: Forum, user?: User} = {}) {
+    (this.text = text),
+    (this.forum = forum),
+    (this.user = user)
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 

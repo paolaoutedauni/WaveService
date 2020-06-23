@@ -8,11 +8,17 @@ import {
   JoinTable,
 } from 'typeorm';
 import { SubCategory } from './subCategory.entity';
-import { Post } from './post.entity';
+import { PostPag } from './post.entity';
 import { User } from './user.entity';
 
 @Entity()
 export class Forum {
+  constructor({title, image, subCategory}:{title?: string, image?: string, subCategory?: SubCategory} = {}) {
+    (this.title = title),
+    (this.image = image),
+    (this.subCategory = subCategory);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -33,8 +39,8 @@ export class Forum {
   users: User[];
 
   @OneToMany(
-    () => Post,
+    () => PostPag,
     post => post.forum,
   )
-  posts: Post[];
+  posts: PostPag[];
 }
