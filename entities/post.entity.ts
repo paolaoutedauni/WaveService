@@ -5,17 +5,18 @@ import {
   ManyToMany,
   JoinTable,
   ManyToOne,
-  PrimaryColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Forum } from './forum.entity';
 
 @Entity()
-export class PostPag {
-  constructor({text, forum, user} : {text?: string, forum?: Forum, user?: User} = {}) {
-    (this.text = text),
-    (this.forum = forum),
-    (this.user = user)
+export class Post {
+  constructor({
+    text,
+    forum,
+    user,
+  }: { text?: string; forum?: Forum; user?: User } = {}) {
+    (this.text = text), (this.forum = forum), (this.user = user);
   }
 
   @PrimaryGeneratedColumn()

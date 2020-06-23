@@ -13,12 +13,16 @@ import { AuthGuard } from '@nestjs/passport';
 import { User } from 'entities/user.entity';
 import { PostDto } from 'src/dto/post.dto';
 import { UserService } from '../user/user.service';
-import { PostPag } from "../../../entities/post.entity";
+import { Post as PostEntity } from '../../../entities/post.entity';
 import { ForumService } from '../forum/forum.service';
 
 @Controller('post')
 export class PostController {
-  constructor(private postService: PostService, private userService: UserService, private forumService: ForumService) {}
+  constructor(
+    private postService: PostService,
+    private userService: UserService,
+    private forumService: ForumService,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get('all/forum/:id')
@@ -37,11 +41,22 @@ export class PostController {
   @UseGuards(AuthGuard('jwt'))
   @Post('publish')
   async createPost(@Body() body: PostDto) {
-    const user = await this.userService.findByEmailOrUsername(body.userEmail, body.userEmail);
+    /*
+      Todos los datos del usuario los puedes tomar del request, no los necesoitas en el body
+      Para publicar un comentario solo necesitas: el texto del comentario y el id del Foro
+    */
+    const user = await this.userService.findByEmailOrUsername(
+      body.userEmail,
+      body.userEmail,
+    );
     const forum = await this.forumService.findById(body.foroId);
-    const post: PostPag = new PostPag({...body, user: user, forum: forum})
+    const post: PostEntity = new PostEntity({
+      ...body,
+      user: user,
+      forum: forum,
+    });
     this.postService.createPost(post);
-    return "lo logre"
+    return 'lo logre';
   }
 
   @UseGuards(AuthGuard('jwt'))
