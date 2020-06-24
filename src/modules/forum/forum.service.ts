@@ -62,4 +62,8 @@ export class ForumService {
       headers: { ...formData.getHeaders() },
     }).catch(err => err);
   }
+
+  findByName( title: string): Promise<Forum> {
+    return this.forumsRepository.findOne({where: {title}})
+  }
 }

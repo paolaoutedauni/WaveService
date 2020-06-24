@@ -8,7 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { SubCategory } from './subCategory.entity';
-import { PostPag } from './post.entity';
+import { Post } from './post.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -39,8 +39,8 @@ export class Forum {
   users: User[];
 
   @OneToMany(
-    () => PostPag,
+    () => Post,
     post => post.forum,
   )
-  posts: PostPag[];
+  posts: Post[];
 }

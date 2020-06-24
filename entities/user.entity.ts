@@ -1,5 +1,5 @@
 import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
-import { PostPag } from './post.entity';
+import { Post } from './post.entity';
 import { userRole } from 'src/helpers/constants';
 
 @Entity()
@@ -68,8 +68,8 @@ export class User {
   isActive: boolean;
 
   @OneToMany(
-    () => PostPag,
+    () => Post,
     post => post.user,
   )
-  posts: PostPag[];
+  posts: Post[];
 }

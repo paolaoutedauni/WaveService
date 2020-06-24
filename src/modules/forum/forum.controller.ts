@@ -108,15 +108,17 @@ export class ForumController {
   @Post('create')
   async createForum(@Body() body: ForumDto) {
     const subCate = await this.subCategoryService.findById(body.subCategoryId);
-    if (subCate) {
+    const forumExist = await this.forumService.findByName(body.title)
+    if(forumExist) {
+      throw new HttpException(
+        'El foro ya se encuentra registrado',
+        HttpStatus.FOUND)
+    }
+    else {
       const forum: Forum = new Forum({ ...body, subCategory: subCate });
       await this.forumService.saveForum(forum);
       return 'Algo bonito';
-    } else {
-      throw new HttpException(
-        'El email o username ya se encuentra registrado',
-        HttpStatus.NOT_FOUND,
-      );
     }
-  }
+    }
+
 }

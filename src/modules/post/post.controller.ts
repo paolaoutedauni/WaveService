@@ -40,20 +40,12 @@ export class PostController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('publish')
-  async createPost(@Body() body: PostDto) {
-    /*
-      Todos los datos del usuario los puedes tomar del request, no los necesoitas en el body
-      Para publicar un comentario solo necesitas: el texto del comentario y el id del Foro
-    */
-    const user = await this.userService.findByEmailOrUsername(
-      body.userEmail,
-      body.userEmail,
-    );
+  async createPost(@Body() body: PostDto, @Request() { user }: { user: User }) {
     const forum = await this.forumService.findById(body.foroId);
     const post: PostEntity = new PostEntity({
       ...body,
-      user: user,
       forum: forum,
+      user: user
     });
     this.postService.createPost(post);
     return 'lo logre';

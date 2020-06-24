@@ -8,6 +8,4 @@ export class PostDto {
     @IsNotEmpty()
     foroId: number;
 
-    @IsNotEmpty()
-    userEmail: string;
 }
