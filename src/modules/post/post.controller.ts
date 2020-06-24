@@ -39,7 +39,7 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('publish/:id')
+  @Post('publish/forum/:id')
   async createPost(
     @Body() body: PostDto,
     @Request() { user }: { user: User },
@@ -51,8 +51,8 @@ export class PostController {
       forum: forum,
       user: user,
     });
-    this.postService.createPost(post);
-    return 'lo logre';
+    this.postService.savePost(post);
+    return { message: 'Post guardado exitosamente' };
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -62,8 +62,7 @@ export class PostController {
     if (post.users) {
       post.users.push(user);
     } else {
-      const users = [user];
-      post.users = users;
+      post.users = [user];
     }
     await this.postService.savePost(post);
     return {
@@ -78,7 +77,9 @@ export class PostController {
     @Request() { user }: { user: User },
   ) {
     const post = await this.postService.findOne(idPost);
-    post.users = post.users.filter(userIn => userIn.email !== user.email);
+    post.users = post.users.filter(
+      (userIn: User) => userIn.email !== user.email,
+    );
     await this.postService.savePost(post);
     return {
       message: 'Dislike succeeded',
