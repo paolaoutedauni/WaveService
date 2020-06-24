@@ -57,6 +57,9 @@ export class ForumController {
     @Request() { user }: { user: User },
   ) {
     const forum = await this.forumService.findById(id);
+    if (!forum) {
+      throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
+    }
     if (forum.users) {
       forum.users.push(user);
     } else {
@@ -75,6 +78,9 @@ export class ForumController {
     @Request() { user }: { user: User },
   ) {
     const forum = await this.forumService.findById(idForum);
+    if (!forum) {
+      throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
+    }
     forum.users = forum.users.filter(
       (userIn: User) => userIn.email !== user.email,
     );

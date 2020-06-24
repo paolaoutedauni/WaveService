@@ -7,6 +7,8 @@ import {
   Body,
   Patch,
   Request,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -59,6 +61,9 @@ export class PostController {
   @Patch('like/:id')
   async likePost(@Param('id') id: number, @Request() { user }: { user: User }) {
     const post = await this.postService.findOne(id);
+    if (!post) {
+      throw new HttpException('El post no existe', HttpStatus.NOT_FOUND);
+    }
     if (post.users) {
       post.users.push(user);
     } else {
@@ -77,6 +82,9 @@ export class PostController {
     @Request() { user }: { user: User },
   ) {
     const post = await this.postService.findOne(idPost);
+    if (!post) {
+      throw new HttpException('El post no existe', HttpStatus.NOT_FOUND);
+    }
     post.users = post.users.filter(
       (userIn: User) => userIn.email !== user.email,
     );
