@@ -4,8 +4,4 @@ export class PostDto {
     @IsString()
     @IsNotEmpty()
     text: string;
-
-    @IsNotEmpty()
-    foroId: number;
-
 }
