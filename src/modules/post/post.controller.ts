@@ -77,7 +77,7 @@ export class PostController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch('dislike/:id')
-  async dislikeForum(
+  async dislikePost(
     @Param('id') idPost: number,
     @Request() { user }: { user: User },
   ) {

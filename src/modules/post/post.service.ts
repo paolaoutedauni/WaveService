@@ -12,7 +12,7 @@ export class PostService {
   ) {}
 
   findOne(id: number): Promise<Post> {
-    return this.postsRepository.findOne(id);
+    return this.postsRepository.findOne(id, {relations: ['users']});
   }
 
   findAllByForum(id: number): Promise<Post[]> {
