@@ -26,7 +26,7 @@ export class ForumController {
   constructor(
     private forumService: ForumService,
     private subCategoryService: SubCategoryService,
-    private uploadImageService: UploadImageService
+    private uploadImageService: UploadImageService,
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -124,8 +124,8 @@ export class ForumController {
       );
     } else {
       const forum: Forum = new Forum({ ...body, subCategory: subCate });
-      await this.forumService.saveForum(forum);
-      return { message: 'Foro creado exitosamente' };
+      const savedForum = await this.forumService.saveForum(forum);
+      return { message: 'Foro creado exitosamente', forum: savedForum };
     }
   }
 }
