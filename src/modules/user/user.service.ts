@@ -50,15 +50,5 @@ export class UserService {
       .execute();
   }
 
-  uploadImage(image: string): Promise<AxiosResponse> {
-    const formData = new FormData();
-    formData.append('image', image);
-    return axios({
-      method: 'post',
-      url:
-        'https://api.imgbb.com/1/upload?key=96370f6b88cfde1ea6a16a5d0d13bb0f',
-      data: formData,
-      headers: { ...formData.getHeaders() },
-    }).catch(err => err);
-  }
+
 }

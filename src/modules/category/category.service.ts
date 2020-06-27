@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Category } from 'entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, createQueryBuilder } from 'typeorm';
+import { Repository, createQueryBuilder, UpdateResult } from 'typeorm';
+import { ContentCategory } from 'entities/contentCategory.entity';
 
 @Injectable()
 export class CategoryService {
@@ -28,5 +29,16 @@ export class CategoryService {
     return this.categoriesRepository.findOne(id, {
       relations: ['color', 'contentCategories'],
     });
+  }
+
+  savePhoto(id: number, url: string): Promise<UpdateResult> {
+    return this.categoriesRepository
+      .createQueryBuilder()
+      .update(ContentCategory)
+      .set({
+        imagen: url,
+      })
+      .where('id = :id', { id: id })
+      .execute();
   }
 }

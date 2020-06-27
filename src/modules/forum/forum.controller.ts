@@ -19,12 +19,14 @@ import { ForumDto } from 'src/dto/forum.dto';
 import { Forum } from 'entities/forum.entity';
 import { SubCategoryService } from '../sub-category/sub-category.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 
 @Controller('forum')
 export class ForumController {
   constructor(
     private forumService: ForumService,
     private subCategoryService: SubCategoryService,
+    private uploadImageService: UploadImageService
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -100,10 +102,10 @@ export class ForumController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Param('id') id: number) {
-    const response = await this.forumService.uploadImage(
+    const response = await this.uploadImageService.uploadImage(
       file.buffer.toString('base64'),
     );
-    await this.forumService.saveProfilePhoto(id, response.data.data.url);
+    await this.forumService.savePhoto(id, response.data.data.url);
     return { imageUrl: response.data.data.url };
   }
 

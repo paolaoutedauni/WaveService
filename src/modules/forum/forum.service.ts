@@ -57,7 +57,7 @@ export class ForumService {
     return this.forumsRepository.save(forum);
   }
 
-  saveProfilePhoto(id: number, url: string): Promise<UpdateResult> {
+  savePhoto(id: number, url: string): Promise<UpdateResult> {
     return this.forumsRepository
       .createQueryBuilder()
       .update(Forum)
@@ -66,18 +66,6 @@ export class ForumService {
       })
       .where('id = :id', { id: id })
       .execute();
-  }
-
-  uploadImage(image: string): Promise<AxiosResponse> {
-    const formData = new FormData();
-    formData.append('image', image);
-    return Axios({
-      method: 'post',
-      url:
-        'https://api.imgbb.com/1/upload?key=96370f6b88cfde1ea6a16a5d0d13bb0f',
-      data: formData,
-      headers: { ...formData.getHeaders() },
-    }).catch(err => err);
   }
 
   findByName(title: string): Promise<Forum> {
