@@ -24,7 +24,7 @@ export class UserController {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
-    private uploadImageService: UploadImageService
+    private uploadImageService: UploadImageService,
   ) {}
 
   @Post('login')

@@ -1,4 +1,13 @@
-import { Controller, Get, UseGuards, Param, Request, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Param,
+  Request,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'entities/user.entity';
@@ -11,7 +20,7 @@ export class CategoryController {
   constructor(
     private categoryService: CategoryService,
     private subCategoryService: SubCategoryService,
-    private uploadImageService: UploadImageService
+    private uploadImageService: UploadImageService,
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -54,7 +63,7 @@ export class CategoryController {
   async findById(@Param('id') id: number) {
     return await this.categoryService.findById(id);
   }
-  
+
   @Post('photo/upload/:id')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
@@ -62,6 +71,7 @@ export class CategoryController {
     const response = await this.uploadImageService.uploadImage(
       file.buffer.toString('base64'),
     );
+
     await this.categoryService.savePhoto(id, response.data.data.url);
     return { imageUrl: response.data.data.url };
   }

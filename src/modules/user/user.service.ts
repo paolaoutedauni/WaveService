@@ -17,8 +17,8 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  findOne(id: number): Promise<User> {
-    return this.usersRepository.findOne(id);
+  findOne(email: string): Promise<User> {
+    return this.usersRepository.findOne(email);
   }
 
   findByEmailAndPassword({
@@ -49,6 +49,4 @@ export class UserService {
       .where('email = :email', { email: user.email })
       .execute();
   }
-
-
 }
