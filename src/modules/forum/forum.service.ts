@@ -2,8 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Forum } from 'entities/forum.entity';
 import { Repository, UpdateResult } from 'typeorm';
-import Axios, { AxiosResponse } from 'axios';
-import FormData = require('form-data');
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
+
 @Injectable()
 export class ForumService {
   constructor(
@@ -11,12 +15,17 @@ export class ForumService {
     private forumsRepository: Repository<Forum>,
   ) {}
 
-  findAll(): Promise<Forum[]> {
-    return this.forumsRepository.find();
+  findAll(options: IPaginationOptions): Promise<Pagination<Forum>> {
+    return paginate<Forum>(this.forumsRepository, options);
   }
 
-  findAllBySubCategory(id: number): Promise<Forum[]> {
-    return this.forumsRepository.find({ where: { subCategory: id } });
+  findAllBySubCategory(
+    id: number,
+    options: IPaginationOptions,
+  ): Promise<Pagination<Forum>> {
+    return paginate<Forum>(this.forumsRepository, options, {
+      where: { subCategory: id },
+    });
   }
 
   findById(id: number): Promise<Forum> {
