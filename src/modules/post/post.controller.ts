@@ -9,6 +9,7 @@ import {
   Request,
   HttpException,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,9 +29,16 @@ export class PostController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('all/forum/:id')
-  async findByForumId(@Param('id') id: number) {
-    const posts = await this.postService.findAllByForum(id);
-    return { posts };
+  async findByForumId(
+    @Param('id') idForum: number,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    limit = limit > 100 ? 100 : limit;
+    return await this.postService.findAllByForum(idForum, {
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))

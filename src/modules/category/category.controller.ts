@@ -7,6 +7,7 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -25,17 +26,19 @@ export class CategoryController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('all')
-  async findAll() {
-    return { categories: await this.categoryService.findAll() };
+  async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    return await this.categoryService.findAll({
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('favorites')
   async findByUser(@Request() { user }: { user: User }) {
     const categories = await this.categoryService.findWithSubCategories();
-    console.log(categories);
     const subcategories = await this.subCategoryService.findByUser(user.email);
-    console.log(subcategories);
     const filterCategories = categories.filter(category => {
       const subCategoriesFiltradas = subcategories.filter(subcategory =>
         category.subCategories.some(sub => sub.id === subcategory.id),

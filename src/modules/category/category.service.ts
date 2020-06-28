@@ -3,7 +3,11 @@ import { Category } from 'entities/category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, createQueryBuilder, UpdateResult } from 'typeorm';
 import { ContentCategory } from 'entities/contentCategory.entity';
-
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 @Injectable()
 export class CategoryService {
   constructor(
@@ -11,10 +15,8 @@ export class CategoryService {
     private categoriesRepository: Repository<Category>,
   ) {}
 
-  findAll(): Promise<Category[]> {
-    return this.categoriesRepository.find({
-      relations: ['color', 'contentCategories'],
-    });
+  findAll(options: IPaginationOptions): Promise<Pagination<Category>> {
+    return paginate(this.categoriesRepository, options);
   }
 
   findWithSubCategories(): Promise<Category[]> {

@@ -11,6 +11,7 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ForumService } from './forum.service';
@@ -31,14 +32,25 @@ export class ForumController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('all')
-  async findAll() {
-    return { forums: await this.forumService.findAll() };
+  async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
+    return await this.forumService.findAll({
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('subcategory/:id')
-  async findBySubcategory(@Param() params) {
-    return { forums: await this.forumService.findAllBySubCategory(params.id) };
+  async findBySubcategory(
+    @Param('id') idSubcategory,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    limit = limit > 100 ? 100 : limit;
+    return await this.forumService.findAllBySubCategory(idSubcategory, {
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
