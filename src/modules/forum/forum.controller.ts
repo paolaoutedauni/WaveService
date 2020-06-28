@@ -33,12 +33,10 @@ export class ForumController {
   @UseGuards(AuthGuard('jwt'))
   @Get('all')
   async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    return {
-      forums: await this.forumService.findAll({
-        page,
-        limit,
-      }),
-    };
+    return await this.forumService.findAll({
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))

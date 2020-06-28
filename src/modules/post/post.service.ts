@@ -26,6 +26,9 @@ export class PostService {
     return paginate<Post>(this.postsRepository, options, {
       where: { forum: id },
       relations: ['user'],
+      order: {
+        date: 'DESC',
+      },
     });
   }
 

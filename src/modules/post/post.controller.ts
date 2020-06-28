@@ -35,12 +35,10 @@ export class PostController {
     @Query('limit') limit = 10,
   ) {
     limit = limit > 100 ? 100 : limit;
-    return {
-      forums: await this.postService.findAllByForum(idForum, {
-        page,
-        limit,
-      }),
-    };
+    return await this.postService.findAllByForum(idForum, {
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
