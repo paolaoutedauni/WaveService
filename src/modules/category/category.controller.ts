@@ -26,12 +26,8 @@ export class CategoryController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('all')
-  async findAll(@Query('page') page = 1, @Query('limit') limit = 10) {
-    limit = limit > 100 ? 100 : limit;
-    return await this.categoryService.findAll({
-      page,
-      limit,
-    });
+  async findAll() {
+    return await this.categoryService.findAll();
   }
 
   @UseGuards(AuthGuard('jwt'))

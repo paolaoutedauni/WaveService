@@ -15,8 +15,8 @@ export class CategoryService {
     private categoriesRepository: Repository<Category>,
   ) {}
 
-  findAll(options: IPaginationOptions): Promise<Pagination<Category>> {
-    return paginate(this.categoriesRepository, options);
+  findAll(): Promise<Category[]> {
+    return this.categoriesRepository.find();
   }
 
   findWithSubCategories(): Promise<Category[]> {
