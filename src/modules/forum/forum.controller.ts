@@ -141,14 +141,4 @@ export class ForumController {
     }
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('getAll/sub-category/:id')
-  async findByUserAndPost(
-    @Request() { user }: { user: User },
-    @Param('id') id,
-  ) {
-    return {
-      forums: await this.forumService.findByUserAndSubCategory(user.email, id),
-    };
-  }
 }

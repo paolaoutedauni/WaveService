@@ -80,20 +80,6 @@ export class ForumService {
   findByName(title: string): Promise<Forum> {
     return this.forumsRepository.findOne({ where: { title } });
   }
-
-  findByUserAndPostWithUsers(
-    email: string,
-    subCategoryId: number,
-  ): Promise<Forum[]> {
-    console.log(subCategoryId);
-    return this.forumsRepository
-      .createQueryBuilder('forum')
-      .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
-        userEmail: email,
-      })
-      .where('forum.subCategory = :subCategoryId', { subCategoryId })
-      .getMany();
-  }
   
   deleteForum(forum : Forum): Promise<Forum> {
     return this.forumsRepository.remove(forum)
