@@ -17,17 +17,17 @@ export class Forum {
     title,
     image,
     subCategory,
-    userCreator,
+    user,
   }: {
     title?: string;
     image?: string;
     subCategory?: SubCategory;
-    userCreator?: string;
+    user?: User;
   } = {}) {
     (this.title = title),
       (this.image = image),
       (this.subCategory = subCategory),
-      (this.userCreator = userCreator);
+      (this.user = user);
   }
 
   @PrimaryGeneratedColumn()
