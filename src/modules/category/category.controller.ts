@@ -33,7 +33,7 @@ export class CategoryController {
   @UseGuards(AuthGuard('jwt'))
   @Get('favorites')
   async findByUser(@Request() { user }: { user: User }) {
-    const categories = await this.categoryService.findWithSubCategories();
+    const categories = await this.categoryService.findAll();
     const subcategories = await this.subCategoryService.findByUser(user.email);
     const filterCategories = categories.filter(category => {
       const subCategoriesFiltradas = subcategories.filter(subcategory =>
@@ -52,9 +52,16 @@ export class CategoryController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('all-with-subcategories')
-  async findWithSubcategories() {
-    return { categories: await this.categoryService.findWithSubCategories() };
+  @Get('all/with/subcategories')
+  async findWithSubcategories(
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    limit = limit > 100 ? 100 : limit;
+    return await this.categoryService.findWithSubCategories({
+      page,
+      limit,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))

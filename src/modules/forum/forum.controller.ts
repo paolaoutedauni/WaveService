@@ -65,6 +65,14 @@ export class ForumController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('user/posts')
+  async findByUserWithPosts(@Request() { user }: { user: User }) {
+    return {
+      forums: await this.forumService.findByUserWithPosts(user.email),
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Patch('like/:id')
   async likeForum(
     @Param('id') id: number,

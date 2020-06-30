@@ -7,6 +7,7 @@ import {
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ForumService {
@@ -38,13 +39,29 @@ export class ForumService {
     email: string,
     subCategoryId: number,
   ): Promise<Forum[]> {
-    console.log(subCategoryId);
     return this.forumsRepository
       .createQueryBuilder('forum')
       .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
         userEmail: email,
       })
       .where('forum.subCategory = :subCategoryId', { subCategoryId })
+      .getMany();
+  }
+
+  findByUserWithPosts(email: string): Promise<Forum[]> {
+    return this.forumsRepository
+      .createQueryBuilder('forum')
+      .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
+        userEmail: email,
+      })
+      .innerJoinAndSelect(
+        'forum.posts',
+        'post',
+        'post.userEmail IN (:userEmail)',
+        {
+          userEmail: email,
+        },
+      )
       .getMany();
   }
 
