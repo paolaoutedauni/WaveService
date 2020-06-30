@@ -54,7 +54,7 @@ export class ForumService {
       .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
         userEmail: email,
       })
-      .innerJoinAndSelect(
+      .leftJoinAndSelect(
         'forum.posts',
         'post',
         'post.userEmail IN (:userEmail)',
@@ -64,6 +64,11 @@ export class ForumService {
       )
       .getMany();
   }
+  /*
+  findByUserWithPostNotSuscribe(email: string): Promise<Forum[]> {
+
+  }
+  */
 
   findByUserAndSubCategoryWithUsers(
     email: string,
