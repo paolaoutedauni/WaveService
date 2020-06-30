@@ -68,7 +68,21 @@ export class ForumController {
   @Get('user/posts')
   async findByUserWithPosts(@Request() { user }: { user: User }) {
     return {
-      forums: await this.forumService.findByUserWithPosts(user.email),
+      forums: await this.forumService.findByUserWithPostsSubscribe(user.email),
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('user/notSubscribe/posts')
+  async findByUserWithPostNotSubscribe(@Request() { user }: { user: User }) {
+    const allForums = await this.forumService.findAllWithPostByUser(user);
+    const subscribeForums = await this.forumService.findByUser(user.email);
+    const forumsNotSubscribeWithPost = allForums.filter(
+      forum =>
+        !subscribeForums.some(subscribeForum => forum.id === subscribeForum.id),
+    );
+    return {
+      forums: forumsNotSubscribeWithPost,
     };
   }
 
@@ -148,5 +162,4 @@ export class ForumController {
       return { message: 'Foro creado exitosamente', forum: savedForum };
     }
   }
-
 }

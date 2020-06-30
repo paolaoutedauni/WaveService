@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Forum } from 'entities/forum.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository, UpdateResult, Not } from 'typeorm';
 import {
   paginate,
   Pagination,
   IPaginationOptions,
 } from 'nestjs-typeorm-paginate';
 import { UserService } from '../user/user.service';
+import { User } from 'entities/user.entity';
 
 @Injectable()
 export class ForumService {
@@ -48,7 +49,16 @@ export class ForumService {
       .getMany();
   }
 
-  findByUserWithPosts(email: string): Promise<Forum[]> {
+  findByUser(email: string): Promise<Forum[]> {
+    return this.forumsRepository
+      .createQueryBuilder('forum')
+      .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
+        userEmail: email,
+      })
+      .getMany();
+  }
+
+  findByUserWithPostsSubscribe(email: string): Promise<Forum[]> {
     return this.forumsRepository
       .createQueryBuilder('forum')
       .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
@@ -64,11 +74,20 @@ export class ForumService {
       )
       .getMany();
   }
-  /*
-  findByUserWithPostNotSuscribe(email: string): Promise<Forum[]> {
 
+  findAllWithPostByUser(user: User): Promise<Forum[]> {
+    return this.forumsRepository
+      .createQueryBuilder('forum')
+      .innerJoinAndSelect(
+        'forum.posts',
+        'post',
+        'post.userEmail IN (:userEmail)',
+        {
+          userEmail: user.email,
+        },
+      )
+      .getMany();
   }
-  */
 
   findByUserAndSubCategoryWithUsers(
     email: string,
@@ -102,8 +121,8 @@ export class ForumService {
   findByName(title: string): Promise<Forum> {
     return this.forumsRepository.findOne({ where: { title } });
   }
-  
-  deleteForum(forum : Forum): Promise<Forum> {
-    return this.forumsRepository.remove(forum)
-  } 
+
+  deleteForum(forum: Forum): Promise<Forum> {
+    return this.forumsRepository.remove(forum);
+  }
 }
