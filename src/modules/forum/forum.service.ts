@@ -102,4 +102,8 @@ export class ForumService {
   findByName(title: string): Promise<Forum> {
     return this.forumsRepository.findOne({ where: { title } });
   }
+  
+  deleteForum(forum : Forum): Promise<Forum> {
+    return this.forumsRepository.remove(forum)
+  } 
 }

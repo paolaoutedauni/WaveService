@@ -148,4 +148,5 @@ export class ForumController {
       return { message: 'Foro creado exitosamente', forum: savedForum };
     }
   }
+
 }
