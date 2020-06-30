@@ -42,4 +42,12 @@ export class PostService {
   savePost(post: Post): Promise<Post> {
     return this.postsRepository.save(post);
   }
+
+  findPostByUser(id: number, email: string): Promise<Post> {
+    return this.postsRepository.findOne(id, {where: {userEmail: email} });
+  }
+
+  deletePost(post: Post): Promise<Post> {
+    return this.postsRepository.remove(post)
+  }
 }

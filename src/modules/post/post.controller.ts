@@ -10,6 +10,7 @@ import {
   HttpException,
   HttpStatus,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -26,20 +27,6 @@ export class PostController {
     private userService: UserService,
     private forumService: ForumService,
   ) {}
-
-  @UseGuards(AuthGuard('jwt'))
-  @Get('all/forum/:id')
-  async findByForumId(
-    @Param('id') idForum: number,
-    @Query('page') page = 1,
-    @Query('limit') limit = 10,
-  ) {
-    limit = limit > 100 ? 100 : limit;
-    return await this.postService.findAllByForum(idForum, {
-      page,
-      limit,
-    });
-  }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('latest/:id')
@@ -100,5 +87,18 @@ export class PostController {
     return {
       message: 'Dislike succeeded',
     };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('delete/:id')
+  async deletePost(@Param('id') id: number, @Request() {user}: {user : User}) {
+    const post = await this.postService.findPostByUser(id, user.email)
+    if (!post) {
+      throw new HttpException('El post no existe', HttpStatus.NOT_FOUND);
+    }
+    await this.postService.deletePost(post)
+    return {
+      message: 'Post Deleted'
+    }
   }
 }

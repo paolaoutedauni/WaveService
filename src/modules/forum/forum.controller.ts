@@ -140,4 +140,15 @@ export class ForumController {
       return { message: 'Foro creado exitosamente', forum: savedForum };
     }
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('getAll/sub-category/:id')
+  async findByUserAndPost(
+    @Request() { user }: { user: User },
+    @Param('id') id,
+  ) {
+    return {
+      forums: await this.forumService.findByUserAndSubCategory(user.email, id),
+    };
+  }
 }
