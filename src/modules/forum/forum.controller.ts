@@ -113,6 +113,14 @@ export class ForumController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('search')
+  async findByUser(@Request() {user}: {user : User}) {
+    return {
+      forums: await this.forumService.findByUser(user.email)
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findById(@Param('id') id: number) {
     return { forum: await this.forumService.findById(id) };
@@ -134,6 +142,7 @@ export class ForumController {
   async createForum(
     @Body() body: ForumDto,
     @Param('idSubcategoria') idSubcategoria: number,
+    @Request() {user} : {user: User}
   ) {
     const subCate = await this.subCategoryService.findById(idSubcategoria);
     const forumExist = await this.forumService.findByName(body.title);
@@ -143,7 +152,7 @@ export class ForumController {
         HttpStatus.FOUND,
       );
     } else {
-      const forum: Forum = new Forum({ ...body, subCategory: subCate });
+      const forum: Forum = new Forum({ ...body, subCategory: subCate, user: user});
       const savedForum = await this.forumService.saveForum(forum);
       return { message: 'Foro creado exitosamente', forum: savedForum };
     }

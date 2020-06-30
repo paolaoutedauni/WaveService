@@ -102,6 +102,10 @@ export class ForumService {
   findByName(title: string): Promise<Forum> {
     return this.forumsRepository.findOne({ where: { title } });
   }
+
+  findByUser(email: string): Promise<Forum[]> {
+    return this.forumsRepository.find({where: {user : email}})
+  }
   
   deleteForum(forum : Forum): Promise<Forum> {
     return this.forumsRepository.remove(forum)
