@@ -128,7 +128,7 @@ export class ForumController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('created/user')
-  async findByUser(@Request() { user }: { user: User }) {
+  async findCreatedByUser(@Request() { user }: { user: User }) {
     return {
       forums: await this.forumService.findForumsCreatedByUser(user.email),
     };
