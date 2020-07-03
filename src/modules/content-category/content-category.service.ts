@@ -27,7 +27,7 @@ export class ContentCategoryService {
       }
 
       findContentByIdCategory(idCategory: number): Promise<ContentCategory[]> {
-          return this.contentsCategoriesRepository.find({where: {category : idCategory}})
+          return this.contentsCategoriesRepository.find({where: {category : idCategory}, relations: ['category']})
       }
 
       findById(id: number): Promise<ContentCategory> {
