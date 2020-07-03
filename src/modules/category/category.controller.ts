@@ -13,15 +13,14 @@ import { CategoryService } from './category.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'entities/user.entity';
 import { SubCategoryService } from '../sub-category/sub-category.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
+import { ContentCategoryService } from '../content-category/content-category.service';
 
 @Controller('category')
 export class CategoryController {
   constructor(
     private categoryService: CategoryService,
     private subCategoryService: SubCategoryService,
-    private uploadImageService: UploadImageService,
+    private contentCategoryService: ContentCategoryService
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -68,5 +67,14 @@ export class CategoryController {
   @Get(':id')
   async findById(@Param('id') id: number) {
     return await this.categoryService.findById(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('content-category/:id')
+  async findContentByCategoryOnlyPositionZero(@Param('id') id: number) {
+    return {
+      Content: await (await this.contentCategoryService.findContentByIdCategory(id)).reverse().pop()
+    } 
+
   }
 }

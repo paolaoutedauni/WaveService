@@ -23,7 +23,7 @@ async findAllContentCategory() {
 
 @UseGuards(AuthGuard('jwt'))
 @Get('category/:id')
-async findContentByCategoryWithoutPositionCero(@Param('id') id: number) {
+async findContentByCategoryWithoutPositionZero(@Param('id') id: number) {
     const category = await this.CategoryService.findById(id)
     if (!category) {
         throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
