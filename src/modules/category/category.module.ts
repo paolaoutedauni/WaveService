@@ -5,10 +5,12 @@ import { CategoryService } from './category.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubCategoryModule } from 'src/modules/sub-category/sub-category.module';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
+import { ContentCategory } from 'entities/contentCategory.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Category]), SubCategoryModule],
   controllers: [CategoryController],
   providers: [CategoryService, UploadImageService],
+  exports: [CategoryService]
 })
 export class CategoryModule {}

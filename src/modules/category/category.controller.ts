@@ -69,16 +69,4 @@ export class CategoryController {
   async findById(@Param('id') id: number) {
     return await this.categoryService.findById(id);
   }
-
-  @Post('photo/upload/:id')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file, @Param('id') id: number) {
-    const response = await this.uploadImageService.uploadImage(
-      file.buffer.toString('base64'),
-    );
-
-    await this.categoryService.savePhoto(id, response.data.data.url);
-    return { imageUrl: response.data.data.url };
-  }
 }
