@@ -8,16 +8,19 @@ import {
   UseInterceptors,
   UploadedFile,
   Request,
+  Query,
 } from '@nestjs/common';
+import { sendEmail } from 'src/helpers/email.service';
 import { LoginDto } from 'src/dto/login.dto';
 import { RegisterDto } from 'src/dto/register.dto';
+import { GenerateResetPasswordDto } from 'src/dto/generateResetPassword.dto';
+import { ResetPasswordDto } from 'src/dto/resetPassword.dto';
 import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthGuard } from '@nestjs/passport';
 import { sha1 } from 'object-hash';
 import { User } from 'entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
-import fs = require('fs');
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 @Controller('user')
 export class UserController {
@@ -35,6 +38,53 @@ export class UserController {
       password: encryptedPass,
     });
     if (user) {
+      delete user.password;
+      return {
+        accessToken: this.jwtService.sign({
+          email: user.email,
+          password: encryptedPass,
+        }),
+        user,
+      };
+    } else {
+      throw new HttpException('Este usuario no existe', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Post('generate/passwordURL')
+  async generateURLForResetPassword(@Body() body: GenerateResetPasswordDto) {
+    const user = await this.userService.findOne(body.email);
+    if (user) {
+      const token = this.jwtService.sign(
+        {
+          password: user.password,
+          email: user.email,
+        },
+        { expiresIn: 1800 },
+      );
+      await sendEmail(
+        user.email,
+        `https://waveapp-f4960.firebaseapp.com/reset/password?token=${token}`,
+      );
+      return {
+        message: 'Correo Enviado',
+      };
+    } else {
+      throw new HttpException('Este usuario no existe', HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @Post('reset/password')
+  async resetPassword(
+    @Body() body: ResetPasswordDto,
+    @Query('token') token: string,
+  ) {
+    const payload: any = this.jwtService.decode(token, { json: true });
+    const encryptedPass = sha1(payload.password);
+    const user = await this.userService.findOne(payload.email);
+    if (user) {
+      user.password = encryptedPass;
+      this.userService.createUser(user);
       delete user.password;
       return {
         accessToken: this.jwtService.sign({
