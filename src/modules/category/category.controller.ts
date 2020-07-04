@@ -19,7 +19,7 @@ import { ContentCategoryService } from '../content-category/content-category.ser
 export class CategoryController {
   constructor(
     private categoryService: CategoryService,
-    private subCategoryService: SubCategoryService
+    private subCategoryService: SubCategoryService,
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -65,7 +65,6 @@ export class CategoryController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findById(@Param('id') id: number) {
-    return await this.categoryService.findById(id);
+    return await this.categoryService.findByIdWithContent(id);
   }
-
 }

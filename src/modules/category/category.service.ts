@@ -17,6 +17,12 @@ export class CategoryService {
 
   findAll(): Promise<Category[]> {
     return this.categoriesRepository.find({
+      relations: ['subCategories'],
+    });
+  }
+
+  findAllWithContent(): Promise<Category[]> {
+    return this.categoriesRepository.find({
       relations: ['subCategories', 'contentCategories'],
     });
   }
@@ -26,14 +32,13 @@ export class CategoryService {
   ): Promise<Pagination<Category>> {
     const queryBuilder = this.categoriesRepository
       .createQueryBuilder('category')
-      .innerJoinAndSelect('category.subCategories', 'subCategory')
-      .innerJoinAndSelect('category.contentCategories', 'contentCategories');
+      .innerJoinAndSelect('category.subCategories', 'subCategory');
     return paginate<Category>(queryBuilder, options);
   }
 
-  findById(id: number): Promise<Category> {
+  findByIdWithContent(id: number): Promise<Category> {
     return this.categoriesRepository.findOne(id, {
-      relations: ['color', 'contentCategories'],
+      relations: ['contentCategories'],
     });
   }
 }
