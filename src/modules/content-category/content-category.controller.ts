@@ -28,11 +28,8 @@ async findContentByCategoryWithoutPositionZero(@Param('id') id: number) {
     if (!category) {
         throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
-    const result =  await (await this.ContentCategoryService.findContentByIdCategory(id)).reverse()
-    result.pop()
-    result.reverse()
+    const result =  await this.ContentCategoryService.findContentByIdCategory(id);
     return {
-        // Intento de no traer el primero
         Contents: result }
 }
 

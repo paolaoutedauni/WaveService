@@ -8,7 +8,7 @@ import { ContentCategoryService } from '../content-category/content-category.ser
 import { ContentCategoryModule } from '../content-category/content-category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category]), SubCategoryModule, forwardRef(() => ContentCategoryModule)],
+  imports: [TypeOrmModule.forFeature([Category]), SubCategoryModule],
   controllers: [CategoryController],
   providers: [CategoryService],
   exports: [CategoryService]

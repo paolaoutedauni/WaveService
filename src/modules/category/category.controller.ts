@@ -19,8 +19,7 @@ import { ContentCategoryService } from '../content-category/content-category.ser
 export class CategoryController {
   constructor(
     private categoryService: CategoryService,
-    private subCategoryService: SubCategoryService,
-    private contentCategoryService: ContentCategoryService
+    private subCategoryService: SubCategoryService
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -69,12 +68,4 @@ export class CategoryController {
     return await this.categoryService.findById(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('content-category/:id')
-  async findContentByCategoryOnlyPositionZero(@Param('id') id: number) {
-    return {
-      Content: await (await this.contentCategoryService.findContentByIdCategory(id)).reverse().pop()
-    } 
-
-  }
 }
