@@ -8,6 +8,8 @@ import {
   UseInterceptors,
   UploadedFile,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -68,4 +70,29 @@ export class CategoryController {
     return await this.categoryService.findById(id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post('disable/:id')
+  async disableCategory(@Param('id') id:number) {
+    const category = this.categoryService.findById(id)
+    if (!category) {
+      throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
+    }
+    this.categoryService.disableCategory(id)
+    return {
+      message: 'Category Disabled'
+    }
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('active/:id')
+  async activeCategory(@Param('id') id:number) {
+    const category = this.categoryService.findById(id)
+    if (!category) {
+      throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
+    }
+    this.categoryService.activeCategory(id)
+    return {
+      message: 'Category Activated'
+    }
+  }
 }

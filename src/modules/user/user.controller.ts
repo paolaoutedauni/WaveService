@@ -9,6 +9,7 @@ import {
   UploadedFile,
   Request,
   Query,
+  Param,
 } from '@nestjs/common';
 import { sendEmail } from 'src/helpers/email.service';
 import { LoginDto } from 'src/dto/login.dto';
@@ -135,4 +136,21 @@ export class UserController {
       };
     }
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('premium/active/:id')
+  async activePremium(@Param('id') id: string) {
+    const user = await this.userService.findByEmailOrUsername(id, id)
+    if(!user) {
+      throw new HttpException(
+        'El email o username no se encuentra registrado',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    this.userService.activePremium(id)
+    return {
+      message: 'Pago Realizado'
+    }
+  }
+
 }

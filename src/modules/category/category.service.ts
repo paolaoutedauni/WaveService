@@ -36,4 +36,30 @@ export class CategoryService {
       relations: ['color', 'contentCategories'],
     });
   }
+
+  disableCategory(id: number): Promise<UpdateResult> {
+    return this.categoriesRepository
+      .createQueryBuilder()
+      .update(Category)
+      .set({
+        isActive: false
+      })
+      .where('id = :id', { id: id })
+      .execute()
+  }
+
+  activeCategory(id: number): Promise<UpdateResult> {
+    return this.categoriesRepository
+      .createQueryBuilder()
+      .update(Category)
+      .set({
+        isActive: true
+      })
+      .where('id = :id', { id: id })
+      .execute()
+  }
+
+  saveCategory(category: Category): Promise<Category> {
+    return this.categoriesRepository.save(category)
+  }
 }

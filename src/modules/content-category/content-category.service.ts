@@ -22,7 +22,7 @@ export class ContentCategoryService {
           return this.contentsCategoriesRepository.remove(content)
       }
 
-      createContentCategory(content: ContentCategory): Promise<ContentCategory> {
+      saveContentCategory(content: ContentCategory): Promise<ContentCategory> {
           return this.contentsCategoriesRepository.save(content)
       }
 

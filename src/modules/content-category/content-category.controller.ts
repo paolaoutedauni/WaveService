@@ -56,12 +56,30 @@ async createContentCategory(@Body() body: ContentCategoryDto) {
         throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
     const content = new ContentCategory({title: body.title, text: body.text, link: body.link, imagen: "", category: category})
-    await this.ContentCategoryService.createContentCategory(content)
+    await this.ContentCategoryService.saveContentCategory(content)
     return {
         message: "Content Created"
     }
 }
-
+/*
+@UseGuards(AuthGuard('jwt'))
+@Post('update/:id')
+async updateContentCategory(@Body() body: ContentCategoryDto, @Param('id') id:number) {
+    const category = await this.CategoryService.findById(body.idCategory)
+    if (!category) {
+        throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
+    }
+    const oldContent = this.ContentCategoryService.findById(id)
+    if (!oldContent) {
+        throw new HttpException('El Content no existe', HttpStatus.NOT_FOUND);
+    }
+    const updateContent = new ContentCategory({title: body.title, text: body.text, link: body.link, category: category})
+    const newContent = {...oldContent, ...updateContent}
+    await this.ContentCategoryService.saveContentCategory(newContent)
+    return {
+        message: "Content Modificated"
+    }
+} */
 @UseGuards(AuthGuard('jwt'))
 @Post('photo/upload/:id')
 @UseInterceptors(FileInterceptor('file'))
