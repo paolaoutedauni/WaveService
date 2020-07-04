@@ -61,7 +61,7 @@ export class UserController {
           password: user.password,
           email: user.email,
         },
-        { expiresIn: 1800 },
+        { expiresIn: 1 },
       );
       await sendEmail(
         user.email,
@@ -80,6 +80,7 @@ export class UserController {
     @Body() body: ResetPasswordDto,
     @Query('token') token: string,
   ) {
+    console.log(this.jwtService.verify(token));
     const payload: any = this.jwtService.decode(token, { json: true });
     const encryptedPass = sha1(payload.password);
     const user = await this.userService.findOne(payload.email);
@@ -140,17 +141,16 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Post('premium/active/:id')
   async activePremium(@Param('id') id: string) {
-    const user = await this.userService.findByEmailOrUsername(id, id)
-    if(!user) {
+    const user = await this.userService.findByEmailOrUsername(id, id);
+    if (!user) {
       throw new HttpException(
         'El email o username no se encuentra registrado',
         HttpStatus.NOT_FOUND,
       );
     }
-    this.userService.activePremium(id)
+    this.userService.activePremium(id);
     return {
-      message: 'Pago Realizado'
-    }
+      message: 'Pago Realizado',
+    };
   }
-
 }

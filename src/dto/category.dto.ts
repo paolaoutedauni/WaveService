@@ -1,11 +1,15 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CategoryDto{
-    @IsNotEmpty()
-    name: string
+export class CategoryDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 
-    image: string
+  @IsString()
+  @IsNotEmpty()
+  image: string;
 
-    @IsNotEmpty()
-    text: string
+  @IsString()
+  @IsNotEmpty()
+  text: string;
 }

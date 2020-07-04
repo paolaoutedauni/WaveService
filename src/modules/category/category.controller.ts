@@ -21,7 +21,7 @@ import { ContentCategoryService } from '../content-category/content-category.ser
 export class CategoryController {
   constructor(
     private categoryService: CategoryService,
-    private subCategoryService: SubCategoryService
+    private subCategoryService: SubCategoryService,
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -72,27 +72,27 @@ export class CategoryController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('disable/:id')
-  async disableCategory(@Param('id') id:number) {
-    const category = this.categoryService.findById(id)
+  async disableCategory(@Param('id') id: number) {
+    const category = this.categoryService.findById(id);
     if (!category) {
       throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
-    this.categoryService.disableCategory(id)
+    this.categoryService.disableCategory(id);
     return {
-      message: 'Category Disabled'
-    }
+      message: 'Category Disabled',
+    };
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('active/:id')
-  async activeCategory(@Param('id') id:number) {
-    const category = this.categoryService.findById(id)
+  @Post('activate/:id') // CAMBIAR EN POSTMAN
+  async activateCategory(@Param('id') id: number) {
+    const category = this.categoryService.findById(id);
     if (!category) {
       throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
-    this.categoryService.activeCategory(id)
+    this.categoryService.activateCategory(id);
     return {
-      message: 'Category Activated'
-    }
+      message: 'Category Activated',
+    };
   }
 }
