@@ -18,6 +18,12 @@ export class Category {
   @Column()
   name: string;
 
+  @Column()
+  image: string;
+
+  @Column()
+  text: string;
+
   @OneToOne(() => Color)
   @JoinColumn()
   color: Color;

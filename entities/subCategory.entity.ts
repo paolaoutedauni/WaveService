@@ -26,6 +26,12 @@ export class SubCategory {
   @Column()
   name: string;
 
+  @Column()
+  image: string;
+
+  @Column()
+  text: string;
+
   @OneToMany(
     () => ContentSubcategory,
     contentSubcategory => contentSubcategory.subCategory,
