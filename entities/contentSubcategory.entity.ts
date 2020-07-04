@@ -23,4 +23,7 @@ export class ContentSubcategory {
 
   @Column()
   link: string;
+
+  @Column({ default: true })
+  isActive: boolean;
 }

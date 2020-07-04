@@ -32,6 +32,9 @@ export class SubCategory {
   @Column()
   text: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToMany(
     () => ContentSubcategory,
     contentSubcategory => contentSubcategory.subCategory,

@@ -3,26 +3,24 @@ import { Category } from './category.entity';
 
 @Entity()
 export class ContentCategory {
-  constructor(
-    {
-      title,
-      text,
-      link,
-      imagen,
-      category
-    }
-    :{
-    title?: string,
-    text?: string,
-    link?: string,
-    imagen?: string,
-    category?: Category
+  constructor({
+    title,
+    text,
+    link,
+    imagen,
+    category,
+  }: {
+    title?: string;
+    text?: string;
+    link?: string;
+    imagen?: string;
+    category?: Category;
   } = {}) {
     (this.title = title),
-    (this.text = text),
-    (this.link = link),
-    (this.imagen = imagen),
-    (this.category = category)
+      (this.text = text),
+      (this.link = link),
+      (this.imagen = imagen),
+      (this.category = category);
   }
 
   @PrimaryGeneratedColumn()
@@ -37,7 +35,7 @@ export class ContentCategory {
   @Column()
   title: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   imagen: string;
 
   @Column()
@@ -45,4 +43,7 @@ export class ContentCategory {
 
   @Column()
   link: string;
+
+  @Column({ default: true })
+  isActive: boolean;
 }

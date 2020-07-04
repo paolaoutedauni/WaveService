@@ -24,6 +24,9 @@ export class Category {
   @Column()
   text: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToOne(() => Color)
   @JoinColumn()
   color: Color;
