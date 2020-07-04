@@ -1,12 +1,4 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-  PrimaryColumn,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Category } from './category.entity';
 
 @Entity()
@@ -37,7 +29,7 @@ export class ContentCategory {
   id: number;
 
   @ManyToOne(
-    type => Category,
+    () => Category,
     category => category.contentCategories,
   )
   category: Category;
