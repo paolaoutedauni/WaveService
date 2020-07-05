@@ -23,6 +23,7 @@ import { sha1 } from 'object-hash';
 import { User } from 'entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
+import { TokenExpiredError } from 'jsonwebtoken';
 @Controller('user')
 export class UserController {
   constructor(
@@ -61,7 +62,7 @@ export class UserController {
           password: user.password,
           email: user.email,
         },
-        { expiresIn: 1 },
+        { expiresIn: 1200 },
       );
       await sendEmail(
         user.email,
@@ -80,23 +81,34 @@ export class UserController {
     @Body() body: ResetPasswordDto,
     @Query('token') token: string,
   ) {
-    console.log(this.jwtService.verify(token));
-    const payload: any = this.jwtService.decode(token, { json: true });
-    const encryptedPass = sha1(payload.password);
-    const user = await this.userService.findOne(payload.email);
-    if (user) {
-      user.password = encryptedPass;
-      this.userService.createUser(user);
-      delete user.password;
-      return {
-        accessToken: this.jwtService.sign({
-          email: user.email,
-          password: encryptedPass,
-        }),
-        user,
-      };
-    } else {
-      throw new HttpException('Este usuario no existe', HttpStatus.NOT_FOUND);
+    try {
+      this.jwtService.verify(token);
+      const payload: any = this.jwtService.decode(token, { json: true });
+      const encryptedPass = sha1(payload.password);
+      const user = await this.userService.findOne(payload.email);
+      if (user) {
+        user.password = encryptedPass;
+        this.userService.createUser(user);
+        delete user.password;
+        return {
+          accessToken: this.jwtService.sign({
+            email: user.email,
+            password: encryptedPass,
+          }),
+          user,
+        };
+      } else {
+        throw new HttpException('Este usuario no existe', HttpStatus.NOT_FOUND);
+      }
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        throw new HttpException('El token es inválido', HttpStatus.BAD_REQUEST);
+      } else {
+        throw new HttpException(
+          'Internal Server Error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     }
   }
 
@@ -141,8 +153,8 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Post('premium/active')
   async activatePremium(@Request() { user }: { user: User }) {
-    this.userService.activePremium(user.email);
-    const newUser = this.userService.findOne(user.email);
+    await this.userService.activePremium(user.email);
+    const newUser = await this.userService.findOne(user.email);
     return {
       user: newUser,
     };
