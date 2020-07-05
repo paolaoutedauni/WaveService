@@ -139,18 +139,12 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('premium/active/:id')
-  async activePremium(@Param('id') id: string) {
-    const user = await this.userService.findByEmailOrUsername(id, id);
-    if (!user) {
-      throw new HttpException(
-        'El email o username no se encuentra registrado',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    this.userService.activePremium(id);
+  @Post('premium/active')
+  async activatePremium(@Request() { user }: { user: User }) {
+    this.userService.activePremium(user.email);
+    const newUser = this.userService.findOne(user.email);
     return {
-      message: 'Pago Realizado',
+      user: newUser,
     };
   }
 }

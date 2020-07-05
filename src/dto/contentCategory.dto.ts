@@ -12,8 +12,4 @@ export class ContentCategoryDto {
   @IsNotEmpty()
   @IsUrl()
   link: string;
-
-  @IsNotEmpty()
-  @IsString()
-  imagen: string;
 }

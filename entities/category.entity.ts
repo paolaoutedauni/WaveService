@@ -1,24 +1,27 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
-import { Color } from './color.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { SubCategory } from './subCategory.entity';
 import { ContentCategory } from './contentCategory.entity';
 
 @Entity()
 export class Category {
+  constructor({
+    name,
+    text,
+    image,
+  }: {
+    name?: string;
+    text?: string;
+    image?: string;
+  } = {}) {
+    (this.name = name), (this.text = text), (this.image = image);
+  }
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column()
@@ -26,10 +29,6 @@ export class Category {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @OneToOne(() => Color)
-  @JoinColumn()
-  color: Color;
 
   @OneToMany(
     () => SubCategory,

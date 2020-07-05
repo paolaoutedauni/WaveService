@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   UseGuards,
-  Delete,
   Param,
   HttpException,
   HttpStatus,
@@ -76,11 +75,10 @@ export class ContentCategoryController {
     if (!category) {
       throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
-    const content = new ContentCategory({ ...body, category });
+    let content = new ContentCategory({ ...body, category });
+    content = await this.contentCategoryService.saveContentCategory(content);
     return {
-      contentCategory: await this.contentCategoryService.saveContentCategory(
-        content,
-      ),
+      content: content,
     };
   }
 

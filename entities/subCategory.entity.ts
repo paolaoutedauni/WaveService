@@ -26,7 +26,7 @@ export class SubCategory {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @Column()

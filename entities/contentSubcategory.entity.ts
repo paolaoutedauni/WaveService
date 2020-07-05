@@ -15,7 +15,7 @@ export class ContentSubcategory {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   imagen: string;
 
   @Column()

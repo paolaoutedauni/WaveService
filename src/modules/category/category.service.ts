@@ -17,6 +17,12 @@ export class CategoryService {
 
   findAll(): Promise<Category[]> {
     return this.categoriesRepository.find({
+      relations: ['subCategories'],
+    });
+  }
+
+  findAllWithContent(): Promise<Category[]> {
+    return this.categoriesRepository.find({
       relations: ['subCategories', 'contentCategories'],
     });
   }
@@ -26,14 +32,17 @@ export class CategoryService {
   ): Promise<Pagination<Category>> {
     const queryBuilder = this.categoriesRepository
       .createQueryBuilder('category')
-      .innerJoinAndSelect('category.subCategories', 'subCategory')
-      .innerJoinAndSelect('category.contentCategories', 'contentCategories');
+      .innerJoinAndSelect('category.subCategories', 'subCategory');
     return paginate<Category>(queryBuilder, options);
   }
 
   findById(id: number): Promise<Category> {
+    return this.categoriesRepository.findOne(id);
+  }
+
+  findByIdWithContent(id: number): Promise<Category> {
     return this.categoriesRepository.findOne(id, {
-      relations: ['color', 'contentCategories'],
+      relations: ['contentCategories'],
     });
   }
 
@@ -44,7 +53,7 @@ export class CategoryService {
       .set({
         isActive: false,
       })
-      .where('id = :id', { id: id })
+      .where('id = :id', { id })
       .execute();
   }
 
@@ -55,11 +64,22 @@ export class CategoryService {
       .set({
         isActive: true,
       })
-      .where('id = :id', { id: id })
+      .where('id = :id', { id })
       .execute();
   }
 
   saveCategory(category: Category): Promise<Category> {
     return this.categoriesRepository.save(category);
+  }
+
+  savePhoto(id: number, url: string): Promise<UpdateResult> {
+    return this.categoriesRepository
+      .createQueryBuilder()
+      .update(Category)
+      .set({
+        image: url,
+      })
+      .where('id = :id', { id: id })
+      .execute();
   }
 }
