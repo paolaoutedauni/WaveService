@@ -10,6 +10,7 @@ import {
   Request,
   Query,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { sendEmail } from 'src/helpers/email.service';
 import { LoginDto } from 'src/dto/login.dto';
@@ -24,6 +25,7 @@ import { User } from 'entities/user.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { userRole } from "../../helpers/constants";
 @Controller('user')
 export class UserController {
   constructor(
@@ -151,7 +153,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('premium/active')
+  @Patch('premium/activate')
   async activatePremium(@Request() { user }: { user: User }) {
     await this.userService.activePremium(user.email);
     const newUser = await this.userService.findOne(user.email);
@@ -159,4 +161,34 @@ export class UserController {
       user: newUser,
     };
   }
-}
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('register/Admin')
+  async registerAdmin(@Request() {user}: {user: User}, @Body() body: RegisterDto) {
+    const admin = await this.userService.findByEmailOrUsername(user.email, user.userName)
+    if ((await admin).role != userRole.ADMIN) {
+      throw new HttpException(
+        'El email no tiene permisos necesarios',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    console.log(admin)
+    const encryptedPass = sha1(body.password);
+    body.password = encryptedPass;
+    const userCreate: User = new User({ ...body, birthday: new Date(body.birthday), role: userRole.ADMIN });
+    const foundUser = await this.userService.findByEmailOrUsername(
+      body.email,
+      body.userName,
+    );
+    if (foundUser) {
+      throw new HttpException(
+        'El email o username ya se encuentra registrado',
+        HttpStatus.FOUND,
+      );
+    }
+    await this.userService.createUser(userCreate);
+    return {
+      message: 'El usuario ha sido creado'
+      }
+    };
+  }
