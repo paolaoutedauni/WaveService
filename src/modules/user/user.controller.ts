@@ -129,7 +129,7 @@ export class UserController {
   async register(@Body() body: RegisterDto) {
     const encryptedPass = sha1(body.password);
     body.password = encryptedPass;
-    const user: User = new User({ ...body, birthday: new Date(body.birthday) });
+    const user: User = new User({ ...body, birthday: new Date(body.birthday), image: "https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg" ,  });
     const foundUser = await this.userService.findByEmailOrUsername(
       body.email,
       body.userName,
