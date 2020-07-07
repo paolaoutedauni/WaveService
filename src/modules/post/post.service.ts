@@ -72,17 +72,4 @@ export class PostService {
       .where('post.id = :id', { id })
       .getOne();
   }
-  /*
-  const user = await queryBuilder.select([
-    'user.id',
-    'user.username',
-    'user.fullName',
-    'user.bio',
-    'user.profilePicture',
-  ])
-  .loadRelationCountAndMap('user.followers', 'user.followers') <--- Added alias to mapToProperty
-  .where('user.id = :userId', { userId })
-  .getOne()
-
-  */
 }
