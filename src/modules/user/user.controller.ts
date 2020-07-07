@@ -175,7 +175,7 @@ export class UserController {
     console.log(admin)
     const encryptedPass = sha1(body.password);
     body.password = encryptedPass;
-    const userCreate: User = new User({ ...body, birthday: new Date(body.birthday), role: userRole.ADMIN });
+    const userCreate: User = new User({ ...body, birthday: new Date(body.birthday), role: userRole.ADMIN, image: "https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg" });
     const foundUser = await this.userService.findByEmailOrUsername(
       body.email,
       body.userName,
