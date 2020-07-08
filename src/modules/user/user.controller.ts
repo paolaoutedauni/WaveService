@@ -86,8 +86,11 @@ export class UserController {
     try {
       this.jwtService.verify(token);
       const payload: any = this.jwtService.decode(token, { json: true });
-      const encryptedPass = sha1(payload.password);
-      const user = await this.userService.findOne(payload.email);
+      const encryptedPass = sha1(body.password);
+      const user = await this.userService.findByEmailAndPassword({
+        email: payload.email,
+        password: payload.password,
+      });
       if (user) {
         user.password = encryptedPass;
         this.userService.createUser(user);
