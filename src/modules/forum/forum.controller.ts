@@ -84,7 +84,7 @@ export class ForumController {
   @Get('user/posts')
   async findByUser(@Request() { user }: { user: User }) {
     return {
-      forums: await this.forumService.findByUser(user.email),
+      forums: await this.forumService.findByUserWithPostsSubscribe(user.email),
     };
   }
 
