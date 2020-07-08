@@ -93,7 +93,7 @@ export class UserController {
       });
       if (user) {
         user.password = encryptedPass;
-        this.userService.createUser(user);
+        await this.userService.createUser(user);
         delete user.password;
         return {
           accessToken: this.jwtService.sign({
