@@ -13,6 +13,7 @@ oauth2Client.setCredentials({
   refresh_token:
     '1//04GxF6pRPNy71CgYIARAAGAQSNwF-L9Irbu3O4TbOS1iMqvWLFyQErIH-t96AVHiC9vhp2vt_iY2_a0WgGO3R_OvRXm5x22dnRZo',
 });
+const accessToken = oauth2Client.getAccessToken();
 // async..await is not allowed in global scope, must use a wrapper
 export const sendEmail = async (email: string, url: string) => {
   // Generate test SMTP service account from ethereal.email
@@ -27,8 +28,7 @@ export const sendEmail = async (email: string, url: string) => {
       clientSecret: 'bgPi5McCb_QtYy1xFG9Yoydf',
       refreshToken:
         '1//04GxF6pRPNy71CgYIARAAGAQSNwF-L9Irbu3O4TbOS1iMqvWLFyQErIH-t96AVHiC9vhp2vt_iY2_a0WgGO3R_OvRXm5x22dnRZo',
-      accessToken:
-        'ya29.a0AfH6SMAyuS71EIznJKOfzH4EmWZTT02k-Vev-zAsTBASYHGbt3MezGVcyTask1ARBr7TjwEp8AEhKrjUKSQWXEyJuH4i7shCfBZ2cNKf6een4rZyQuip5DnWBip7uRjvkdrxh7aegFAV7UAhBE1zkZymOJl3b5enlzw',
+      accessToken,
     },
     tls: {
       rejectUnauthorized: false,
