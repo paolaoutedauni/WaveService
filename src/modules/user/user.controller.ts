@@ -69,6 +69,7 @@ export class UserController {
       await sendEmail(
         user.email,
         `https://waveapp-f4960.firebaseapp.com/reset/password?token=${token}`,
+        user.firstName,
       );
       return {
         message: 'Correo Enviado',
