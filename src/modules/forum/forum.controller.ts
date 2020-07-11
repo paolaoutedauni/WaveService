@@ -212,7 +212,7 @@ export class ForumController {
     }
     forum = { ...forum, ...body };
     return {
-      subCategory: await this.forumService.saveForum(forum),
+      forum: await this.forumService.saveForum(forum),
     };
   }
 }
