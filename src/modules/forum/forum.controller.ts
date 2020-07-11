@@ -17,6 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ForumService } from './forum.service';
 import { User } from 'entities/user.entity';
 import { ForumDto } from 'src/dto/forum.dto';
+import { UpdateForumDto } from 'src/dto/updateForum.dto';
 import { Forum } from 'entities/forum.entity';
 import { SubCategoryService } from '../sub-category/sub-category.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -209,6 +210,21 @@ export class ForumController {
     forum.isActive = !forum.isActive;
     return {
       category: await this.forumService.saveForum(forum),
+    }
+  }
+  
+  @Post('update/:idForum')
+  async updateForum(
+    @Body() body: UpdateForumDto,
+    @Param('idForum') idForum: number,
+  ) {
+    let forum = await this.forumService.findById(idForum);
+    if (!forum) {
+      throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
+    }
+    forum = { ...forum, ...body };
+    return {
+      forum: await this.forumService.saveForum(forum),
     };
   }
 }

@@ -19,13 +19,14 @@ import { FavoriteSubCategoryDto } from 'src/dto/favoriteSubCategory.dto';
 import { ForumService } from '../forum/forum.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
+import { SubCategoryDto } from 'src/dto/subCategory.dto';
 
 @Controller('sub-category')
 export class SubCategoryController {
   constructor(
     private subCategoryService: SubCategoryService,
     private forumService: ForumService,
-    private uploadImageService: UploadImageService
+    private uploadImageService: UploadImageService,
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -97,6 +98,25 @@ export class SubCategoryController {
   @Get(':id')
   async findById(@Param('id') id: number) {
     return await this.subCategoryService.findById(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('update/:idsubCategory')
+  async updateSubCategory(
+    @Body() body: SubCategoryDto,
+    @Param('idsubCategory') idsubCategory: number,
+  ) {
+    let subCategory = await this.subCategoryService.findById(idsubCategory);
+    if (!subCategory) {
+      throw new HttpException(
+        'La subcategoria no existe',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    subCategory = { ...subCategory, ...body };
+    return {
+      subCategory: await this.subCategoryService.saveSubCategory(subCategory),
+    };
   }
 
   @Post('photo/upload/:id')
