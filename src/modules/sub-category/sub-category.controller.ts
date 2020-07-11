@@ -9,6 +9,8 @@ import {
   Post,
   UseInterceptors,
   UploadedFile,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { SubCategoryService } from './sub-category.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -107,4 +109,19 @@ export class SubCategoryController {
     await this.subCategoryService.savePhoto(id, response.data.data.url);
     return { imageUrl: response.data.data.url };
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('change/status/:id')
+  async chageStatusSubCategory(@Param('id') id:number) {
+    const subCategory = await this.subCategoryService.findById(id)
+    if (!subCategory) {
+      throw new HttpException('La Subcategoria no existe', HttpStatus.NOT_FOUND);
+    }
+    subCategory.isActive = !subCategory.isActive
+    return {
+      subCategory: await this.subCategoryService.saveSubCategory(subCategory),
+      message: 'Status Changed'
+    }
+  }
+
 }

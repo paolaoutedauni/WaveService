@@ -198,4 +198,17 @@ export class ForumController {
     const forum = await this.forumService.getSubscribersCountByForum(id);
     return { forum };
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Patch('change/status/:id')
+  async changeStatusForum(@Param('id') id: number) {
+    const forum = await this.forumService.findById(id);
+    if (!this.findById) {
+      throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
+    }
+    forum.isActive = !forum.isActive;
+    return {
+      category: await this.forumService.saveForum(forum),
+    };
+  }
 }

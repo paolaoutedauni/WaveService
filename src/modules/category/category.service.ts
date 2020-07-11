@@ -46,28 +46,6 @@ export class CategoryService {
     });
   }
 
-  disableCategory(id: number): Promise<UpdateResult> {
-    return this.categoriesRepository
-      .createQueryBuilder()
-      .update(Category)
-      .set({
-        isActive: false,
-      })
-      .where('id = :id', { id })
-      .execute();
-  }
-
-  activateCategory(id: number): Promise<UpdateResult> {
-    return this.categoriesRepository
-      .createQueryBuilder()
-      .update(Category)
-      .set({
-        isActive: true,
-      })
-      .where('id = :id', { id })
-      .execute();
-  }
-
   saveCategory(category: Category): Promise<Category> {
     return this.categoriesRepository.save(category);
   }

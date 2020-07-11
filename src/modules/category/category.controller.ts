@@ -83,26 +83,13 @@ export class CategoryController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Patch('disable/:id')
-  async disableCategory(@Param('id') id: number) {
+  @Patch('change/status/:id')
+  async changeStatusCategory(@Param('id') id: number) {
     const category = await this.categoryService.findByIdWithContent(id);
     if (!category) {
       throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
-    category.isActive = false;
-    return {
-      category: await this.categoryService.saveCategory(category),
-    };
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Patch('activate/:id')
-  async activateCategory(@Param('id') id: number) {
-    const category = await this.categoryService.findByIdWithContent(id);
-    if (!category) {
-      throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
-    }
-    category.isActive = true;
+    category.isActive = !category.isActive;
     return {
       category: await this.categoryService.saveCategory(category),
     };
