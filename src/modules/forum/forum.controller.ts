@@ -23,6 +23,7 @@ import { SubCategoryService } from '../sub-category/sub-category.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 import { SubCategory } from 'entities/subCategory.entity';
+import { CreateAdminForumDto } from 'src/dto/createForumAdmin.dto';
 
 @Controller('forum')
 export class ForumController {
@@ -213,6 +214,7 @@ export class ForumController {
     }
   }
   
+  @UseGuards(AuthGuard('jwt'))
   @Post('update/:idForum')
   async updateForum(
     @Body() body: UpdateForumDto,
@@ -226,5 +228,22 @@ export class ForumController {
     return {
       forum: await this.forumService.saveForum(forum),
     };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('admin/create')
+  async createForumByAdmin(@Body() body: CreateAdminForumDto, @Request() { user }: { user: User } ) {
+    const subCate = await this.subCategoryService.findById(body.subcategory)
+    if (!subCate) {
+      throw new HttpException('La categoria no existe', HttpStatus.NOT_FOUND);
+    }
+    const exist = await this.forumService.findByName(body.title)
+    if (exist) {
+      throw new HttpException('El foro existe', HttpStatus.FOUND);
+    }
+    const forum = new Forum({...body, subCategory: subCate, user: user})
+    return {
+      forum: await this.forumService.saveForum(forum), message: 'El foro a sido creado Satisfactoriamente'
+    }
   }
 }

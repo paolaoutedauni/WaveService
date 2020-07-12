@@ -60,4 +60,10 @@ export class CategoryService {
       .where('id = :id', { id: id })
       .execute();
   }
+
+  findByName(name: string): Promise<Category> {
+    return this.categoriesRepository.findOne({
+      where: { name: name }
+    });
+  }
 }

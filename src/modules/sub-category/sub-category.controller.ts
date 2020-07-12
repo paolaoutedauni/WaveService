@@ -20,12 +20,16 @@ import { ForumService } from '../forum/forum.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 import { SubCategoryDto } from 'src/dto/subCategory.dto';
+import { CreateSubCategoryDto } from 'src/dto/createSubCategory.dto';
+import { CategoryService } from '../category/category.service';
+import { SubCategory } from 'entities/subCategory.entity';
 
 @Controller('sub-category')
 export class SubCategoryController {
   constructor(
     private subCategoryService: SubCategoryService,
     private forumService: ForumService,
+    private categoryService: CategoryService,
     private uploadImageService: UploadImageService,
   ) {}
 
@@ -117,7 +121,7 @@ export class SubCategoryController {
     return {
       subCategory: await this.subCategoryService.saveSubCategory(subCategory),
     };
-  }
+  } 
 
   @Post('photo/upload/:id')
   @UseGuards(AuthGuard('jwt'))
@@ -144,4 +148,19 @@ export class SubCategoryController {
     }
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post('admin/create')
+  async createSubCategory(@Body() body:CreateSubCategoryDto) {
+    const category = await this.categoryService.findById(body.category)
+    if (!category) {
+      throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
+    }
+    const exist = await this.subCategoryService.findByName(body.name)
+    if(exist) {
+      throw new HttpException('La Subcategoria ya existe', HttpStatus.FOUND);
+    }
+    const subCategory= new SubCategory({... body, category: category, image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg'}) 
+    const savedSubCategory = await this.subCategoryService.saveSubCategory(subCategory);
+    return { message: 'Subcategoria creada exitosamente', SubCategory: savedSubCategory };
+  }
 }
