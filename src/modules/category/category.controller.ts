@@ -33,7 +33,7 @@ export class CategoryController {
   @UseGuards(AuthGuard('jwt'))
   @Get('all')
   async findAll() {
-    return await this.categoryService.findAll();
+    return await this.categoryService.findAllWithoutRelations();
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -98,12 +98,15 @@ export class CategoryController {
   @UseGuards(AuthGuard('jwt'))
   @Post('admin/create')
   async createCategory(@Body() body: CategoryDto) {
-    const exist = await this.categoryService.findByName(body.name)
-    console.log(exist)
+    const exist = await this.categoryService.findByName(body.name);
+    console.log(exist);
     if (exist) {
       throw new HttpException('La Categoria existe', HttpStatus.FOUND);
     }
-    const category = new Category({ ...body , image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg'});
+    const category = new Category({
+      ...body,
+      image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
+    });
     const newCategory = await this.categoryService.saveCategory(category);
     return {
       category: newCategory,

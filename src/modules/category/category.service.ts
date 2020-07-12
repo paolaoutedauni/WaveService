@@ -21,6 +21,10 @@ export class CategoryService {
     });
   }
 
+  findAllWithoutRelations(): Promise<Category[]> {
+    return this.categoriesRepository.find();
+  }
+
   findAllWithContent(): Promise<Category[]> {
     return this.categoriesRepository.find({
       relations: ['subCategories', 'contentCategories'],
@@ -63,7 +67,7 @@ export class CategoryService {
 
   findByName(name: string): Promise<Category> {
     return this.categoriesRepository.findOne({
-      where: { name: name }
+      where: { name: name },
     });
   }
 }
