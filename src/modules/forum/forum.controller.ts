@@ -211,9 +211,9 @@ export class ForumController {
     forum.isActive = !forum.isActive;
     return {
       category: await this.forumService.saveForum(forum),
-    }
+    };
   }
-  
+
   @UseGuards(AuthGuard('jwt'))
   @Post('update/:idForum')
   async updateForum(
@@ -232,18 +232,25 @@ export class ForumController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('admin/create')
-  async createForumByAdmin(@Body() body: CreateAdminForumDto, @Request() { user }: { user: User } ) {
-    const subCate = await this.subCategoryService.findById(body.subcategory)
+  async createForumByAdmin(
+    @Body() body: CreateAdminForumDto,
+    @Request() { user }: { user: User },
+  ) {
+    const subCate = await this.subCategoryService.findById(body.subcategory);
     if (!subCate) {
-      throw new HttpException('La categoria no existe', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'La subcategoria no existe',
+        HttpStatus.NOT_FOUND,
+      );
     }
-    const exist = await this.forumService.findByName(body.title)
+    const exist = await this.forumService.findByName(body.title);
     if (exist) {
-      throw new HttpException('El foro existe', HttpStatus.FOUND);
+      throw new HttpException('El foro ya existe', HttpStatus.FOUND);
     }
-    const forum = new Forum({...body, subCategory: subCate, user: user})
+    const forum = new Forum({ ...body, subCategory: subCate, user: user });
     return {
-      forum: await this.forumService.saveForum(forum), message: 'El foro a sido creado Satisfactoriamente'
-    }
+      forum: await this.forumService.saveForum(forum),
+      message: 'El foro ha sido creado Satisfactoriamente',
+    };
   }
 }

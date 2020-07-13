@@ -8,8 +8,4 @@ export class SubCategoryDto {
   @IsString()
   @IsNotEmpty()
   text: string;
-
-  @IsBoolean()
-  @IsNotEmpty()
-  isActive: boolean;
 }
