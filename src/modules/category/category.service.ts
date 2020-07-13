@@ -25,6 +25,12 @@ export class CategoryService {
     return this.categoriesRepository.find();
   }
 
+  findAllWithSubcategoriesAdmin(): Promise<Category[]> {
+    return this.categoriesRepository.find({
+      relations: ['subCategories'],
+    });
+  }
+
   findAllWithContent(): Promise<Category[]> {
     return this.categoriesRepository.find({
       relations: ['subCategories', 'contentCategories'],
