@@ -14,19 +14,21 @@ import { User } from './user.entity';
 
 @Entity()
 export class SubCategory {
-
   constructor({
     name,
     text,
     category,
-    image
+    image,
   }: {
     name?: string;
     text?: string;
     category?: Category;
     image?: string;
-  } = {} ) {
-    (this.name = name), (this.text = text), (this.category = category), (this.image = image);
+  } = {}) {
+    (this.name = name),
+      (this.text = text),
+      (this.category = category),
+      (this.image = image);
   }
 
   @PrimaryGeneratedColumn()
@@ -46,6 +48,9 @@ export class SubCategory {
 
   @Column()
   text: string;
+
+  @Column()
+  link: string;
 
   @Column({ default: true })
   isActive: boolean;
