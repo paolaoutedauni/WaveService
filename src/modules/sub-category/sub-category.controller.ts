@@ -138,11 +138,16 @@ export class SubCategoryController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Param('id') id: number) {
-    const response = await this.uploadImageService.uploadImage(
-      file.buffer.toString('base64'),
-    );
-    await this.subCategoryService.savePhoto(id, response.data.data.url);
-    return { imageUrl: response.data.data.url };
+    try {
+      const response = await this.uploadImageService.uploadImage(
+        file.buffer.toString('base64'),
+      );
+      await this.subCategoryService.savePhoto(id, response.data.data.url);
+      return { imageUrl: response.data.data.url };
+    } catch (error) {
+      console.log(error);
+      return { imageUrl: 'error' };
+    }
   }
 
   @UseGuards(AuthGuard('jwt'))
