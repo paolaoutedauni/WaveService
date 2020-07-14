@@ -31,6 +31,14 @@ export class CategoryService {
     });
   }
 
+  findAllWithSubcategoriesAndForumsAdmin(): Promise<Category[]> {
+    return this.categoriesRepository
+      .createQueryBuilder('category')
+      .innerJoinAndSelect('category.subCategories', 'subCategory')
+      .innerJoinAndSelect('subCategory.forums', 'forums')
+      .getMany();
+  }
+
   findAllWithContent(): Promise<Category[]> {
     return this.categoriesRepository.find({
       relations: ['subCategories', 'contentCategories'],

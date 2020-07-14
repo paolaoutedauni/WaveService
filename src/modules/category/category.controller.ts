@@ -43,6 +43,12 @@ export class CategoryController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('admin/all/subcategories/forums')
+  async findAllWithSubcategoriesAndForumsAdmin() {
+    return await this.categoryService.findAllWithSubcategoriesAndForumsAdmin();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get('all/content')
   async findAllWithContent() {
     return await this.categoryService.findAllWithContent();
