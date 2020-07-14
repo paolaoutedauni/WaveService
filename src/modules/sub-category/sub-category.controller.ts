@@ -121,8 +121,8 @@ export class SubCategoryController {
     return {
       subCategory: await this.subCategoryService.saveSubCategory(subCategory),
     };
-  } 
-
+  }
+  /*
   @Post('photo/upload/:id')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
@@ -133,34 +133,62 @@ export class SubCategoryController {
     await this.subCategoryService.savePhoto(id, response.data.data.url);
     return { imageUrl: response.data.data.url };
   }
-
+  */
+  @Post('photo/upload/:id')
   @UseGuards(AuthGuard('jwt'))
-  @Patch('change/status/:id')
-  async chageStatusSubCategory(@Param('id') id:number) {
-    const subCategory = await this.subCategoryService.findById(id)
-    if (!subCategory) {
-      throw new HttpException('La Subcategoria no existe', HttpStatus.NOT_FOUND);
-    }
-    subCategory.isActive = !subCategory.isActive
-    return {
-      subCategory: await this.subCategoryService.saveSubCategory(subCategory),
-      message: 'Status Changed'
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadFile(@UploadedFile() file, @Param('id') id: number) {
+    try {
+      const response = await this.uploadImageService.uploadImage(
+        file.buffer.toString('base64'),
+      );
+      await this.subCategoryService.savePhoto(id, response.data.data.url);
+      return { imageUrl: response.data.data.url };
+    } catch (error) {
+      console.log(error);
+      return { imageUrl: 'error' };
     }
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Patch('change/status/:id')
+  async chageStatusSubCategory(@Param('id') id: number) {
+    const subCategory = await this.subCategoryService.findById(id);
+    if (!subCategory) {
+      throw new HttpException(
+        'La Subcategoria no existe',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    subCategory.isActive = !subCategory.isActive;
+    return {
+      subCategory: await this.subCategoryService.saveSubCategory(subCategory),
+      message: 'Status Changed',
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Post('admin/create')
-  async createSubCategory(@Body() body:CreateSubCategoryDto) {
-    const category = await this.categoryService.findById(body.category)
+  async createSubCategory(@Body() body: CreateSubCategoryDto) {
+    const category = await this.categoryService.findById(body.category);
     if (!category) {
       throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
-    const exist = await this.subCategoryService.findByName(body.name)
-    if(exist) {
+    const exist = await this.subCategoryService.findByName(body.name);
+    if (exist) {
       throw new HttpException('La Subcategoria ya existe', HttpStatus.FOUND);
     }
-    const subCategory= new SubCategory({... body, category: category, image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg'}) 
-    const savedSubCategory = await this.subCategoryService.saveSubCategory(subCategory);
-    return { message: 'Subcategoria creada exitosamente', SubCategory: savedSubCategory };
+    const subCategory = new SubCategory({
+      ...body,
+      category: category,
+      image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
+    });
+    const savedSubCategory = await this.subCategoryService.saveSubCategory(
+      subCategory,
+    );
+    return {
+      message: 'Subcategoria creada exitosamente',
+      SubCategory: savedSubCategory,
+    };
   }
 }
