@@ -99,12 +99,6 @@ export class SubCategoryController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':id')
-  async findById(@Param('id') id: number) {
-    return await this.subCategoryService.findById(id);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Post('update/:idsubCategory')
   async updateSubCategory(
     @Body() body: SubCategoryDto,
@@ -190,5 +184,11 @@ export class SubCategoryController {
       message: 'Subcategoria creada exitosamente',
       SubCategory: savedSubCategory,
     };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    return await this.subCategoryService.findById(id);
   }
 }
