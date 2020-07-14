@@ -116,7 +116,7 @@ export class SubCategoryController {
       subCategory: await this.subCategoryService.saveSubCategory(subCategory),
     };
   }
-  /*
+
   @Post('photo/upload/:id')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('file'))
@@ -126,18 +126,6 @@ export class SubCategoryController {
     );
     await this.subCategoryService.savePhoto(id, response.data.data.url);
     return { imageUrl: response.data.data.url };
-  }
-*/
-  @Post('photo/upload/:id')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file, @Param('id') id: number) {
-    /*
-    const response = await this.uploadImageService.uploadImage(
-      file.buffer.toString('base64'),
-    );*/
-    await this.subCategoryService.savePhoto(id, 'imagenaja');
-    return { imageUrl: 'imagenaja' };
   }
 
   /*
