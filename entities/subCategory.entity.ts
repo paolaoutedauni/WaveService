@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { Category } from './category.entity';
 import { Forum } from './forum.entity';
-import { ContentSubcategory } from './contentSubcategory.entity';
 import { User } from './user.entity';
 
 @Entity()
@@ -54,12 +53,6 @@ export class SubCategory {
 
   @Column({ default: true })
   isActive: boolean;
-
-  @OneToMany(
-    () => ContentSubcategory,
-    contentSubcategory => contentSubcategory.subCategory,
-  )
-  contentSubcategories: ContentSubcategory[];
 
   @OneToMany(
     () => Forum,
