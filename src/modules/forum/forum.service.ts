@@ -60,10 +60,14 @@ export class ForumService {
     });
   }
 
-  findById(id: number): Promise<Forum> {
+  findByIdWithUsersAndSubcategory(id: number): Promise<Forum> {
     return this.forumsRepository.findOne(id, {
       relations: ['subCategory', 'users'],
     });
+  }
+
+  findById(id: number): Promise<Forum> {
+    return this.forumsRepository.findOne(id);
   }
 
   findByUserAndSubCategory(

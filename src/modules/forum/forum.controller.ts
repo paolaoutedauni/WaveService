@@ -155,7 +155,12 @@ export class ForumController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async findById(@Param('id') id: number) {
-    return { forum: await this.forumService.findById(id) };
+    const forum = await this.forumService.findByIdWithUsersAndSubcategory(id);
+    forum.users = forum.users.map(user => {
+      delete user.password;
+      return user;
+    });
+    return { forum };
   }
 
   @Post('photo/upload/:id')
@@ -210,7 +215,7 @@ export class ForumController {
     }
     forum.isActive = !forum.isActive;
     return {
-      category: await this.forumService.saveForum(forum),
+      forum: await this.forumService.saveForum(forum),
     };
   }
 
