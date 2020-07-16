@@ -27,6 +27,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 import { TokenExpiredError } from 'jsonwebtoken';
 import { userRole } from '../../helpers/constants';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
 @Controller('user')
 export class UserController {
   constructor(
@@ -179,7 +181,8 @@ export class UserController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.SUPER_ADMIN)
   @Post('register/Admin')
   async registerAdmin(
     @Request() { user }: { user: User },

@@ -24,6 +24,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 import { SubCategory } from 'entities/subCategory.entity';
 import { CreateAdminForumDto } from 'src/dto/createForumAdmin.dto';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { userRole } from 'src/helpers/constants';
 
 @Controller('forum')
 export class ForumController {
@@ -106,6 +109,8 @@ export class ForumController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch('like/:id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
   async likeForum(
     @Param('id') id: number,
     @Request() { user }: { user: User },
@@ -130,6 +135,8 @@ export class ForumController {
 
   @UseGuards(AuthGuard('jwt'))
   @Patch('dislike/:id')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
   async dislikeForum(
     @Param('id') idForum: number,
     @Request() { user }: { user: User },
@@ -214,8 +221,9 @@ export class ForumController {
     return { forum };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('change/status/:id')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async changeStatusForum(@Param('id') id: number) {
     const forum = await this.forumService.findById(id);
     if (!this.findById) {
@@ -227,8 +235,9 @@ export class ForumController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post('update/:idForum')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async updateForum(
     @Body() body: UpdateForumDto,
     @Param('idForum') idForum: number,

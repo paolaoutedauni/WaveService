@@ -21,6 +21,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadImageService } from 'src/helpers/upload-image/upload-image.service';
 import { Category } from 'entities/category.entity';
 import { CategoryDto } from 'src/dto/category.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { userRole } from 'src/helpers/constants';
 
 @Controller('category')
 export class CategoryController {
@@ -94,8 +97,9 @@ export class CategoryController {
     return await this.categoryService.findByIdWithContent(id);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('change/status/:id')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async changeStatusCategory(@Param('id') id: number) {
     const category = await this.categoryService.findByIdWithContent(id);
     if (!category) {
@@ -107,8 +111,9 @@ export class CategoryController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post('admin/create')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async createCategory(@Body() body: CategoryDto) {
     const exist = await this.categoryService.findByName(body.name);
     console.log(exist);
@@ -125,8 +130,9 @@ export class CategoryController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post('update/:idCategory')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async updateCategory(
     @Body() body: CategoryDto,
     @Param('idCategory') idCategory: number,
@@ -141,7 +147,8 @@ export class CategoryController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   @Post('photo/upload/:id')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Param('id') id: number) {

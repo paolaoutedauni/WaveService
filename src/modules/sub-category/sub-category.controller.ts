@@ -23,6 +23,9 @@ import { SubCategoryDto } from 'src/dto/subCategory.dto';
 import { CreateSubCategoryDto } from 'src/dto/createSubCategory.dto';
 import { CategoryService } from '../category/category.service';
 import { SubCategory } from 'entities/subCategory.entity';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { userRole } from 'src/helpers/constants';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @Controller('sub-category')
 export class SubCategoryController {
@@ -49,7 +52,8 @@ export class SubCategoryController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
   @Patch('add/favorite')
   async addAsFavorite(
     @Request() { user }: { user: User },
@@ -70,7 +74,8 @@ export class SubCategoryController {
     }));
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
   @Patch('dislike/:id')
   async dislikeSubcategory(
     @Param('id') idSubcategory: number,
@@ -98,8 +103,9 @@ export class SubCategoryController {
     });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post('update/:idsubCategory')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async updateSubCategory(
     @Body() body: SubCategoryDto,
     @Param('idsubCategory') idsubCategory: number,
@@ -118,7 +124,8 @@ export class SubCategoryController {
   }
 
   @Post('photo/upload/:id')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file, @Param('id') id: number) {
     const response = await this.uploadImageService.uploadImage(
@@ -145,8 +152,9 @@ export class SubCategoryController {
     }
   }
 */
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('change/status/:id')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async chageStatusSubCategory(@Param('id') id: number) {
     const subCategory = await this.subCategoryService.findById(id);
     if (!subCategory) {
@@ -162,8 +170,9 @@ export class SubCategoryController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Post('admin/create')
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async createSubCategory(@Body() body: CreateSubCategoryDto) {
     const category = await this.categoryService.findById(body.category);
     if (!category) {
