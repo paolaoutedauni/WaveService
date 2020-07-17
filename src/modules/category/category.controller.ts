@@ -24,6 +24,9 @@ import { CategoryDto } from 'src/dto/category.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { userRole } from 'src/helpers/constants';
+import { SubCategory } from 'entities/subCategory.entity';
+import { Forum } from 'entities/forum.entity';
+import { ForumService } from '../forum/forum.service';
 
 @Controller('category')
 export class CategoryController {
@@ -31,6 +34,7 @@ export class CategoryController {
     private categoryService: CategoryService,
     private subCategoryService: SubCategoryService,
     private uploadImageService: UploadImageService,
+    private forumService: ForumService,
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
@@ -101,14 +105,44 @@ export class CategoryController {
   @Patch('change/status/:id')
   @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async changeStatusCategory(@Param('id') id: number) {
-    const category = await this.categoryService.findByIdWithContent(id);
+    const category = await this.categoryService.findOneWithSubcategoriesAndForumsAdmin(
+      id,
+    );
     if (!category) {
       throw new HttpException('La Categoria no existe', HttpStatus.NOT_FOUND);
     }
     category.isActive = !category.isActive;
-    return {
-      category: await this.categoryService.saveCategory(category),
-    };
+    let promises: Promise<any>[] = [];
+    promises.push(this.categoryService.saveCategory(category));
+
+    promises = promises.concat(
+      category.subCategories.map((subCategory: SubCategory) => {
+        const disabledSubCategory: SubCategory = {
+          ...subCategory,
+          isActive: category.isActive,
+        };
+        return this.subCategoryService.saveSubCategory(disabledSubCategory);
+      }),
+    );
+
+    promises = promises.concat(
+      category.subCategories.map((subCategory: SubCategory) => {
+        const forumPromises = subCategory.forums.map((forum: Forum) => {
+          const disabledForum: Forum = {
+            ...forum,
+            isActive: category.isActive,
+          };
+          return this.forumService.saveForum(disabledForum);
+        });
+        return Promise.all(forumPromises);
+      }),
+    );
+
+    Promise.all(promises).then(([updatedCategory]) => {
+      return {
+        category: updatedCategory,
+      };
+    });
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)

@@ -26,6 +26,7 @@ import { SubCategory } from 'entities/subCategory.entity';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { userRole } from 'src/helpers/constants';
 import { Roles } from 'src/decorators/roles.decorator';
+import { Forum } from 'entities/forum.entity';
 
 @Controller('sub-category')
 export class SubCategoryController {
@@ -156,7 +157,7 @@ export class SubCategoryController {
   @Patch('change/status/:id')
   @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   async chageStatusSubCategory(@Param('id') id: number) {
-    const subCategory = await this.subCategoryService.findById(id);
+    const subCategory = await this.subCategoryService.findByIdWithForums(id);
     if (!subCategory) {
       throw new HttpException(
         'La Subcategoria no existe',
@@ -164,10 +165,23 @@ export class SubCategoryController {
       );
     }
     subCategory.isActive = !subCategory.isActive;
-    return {
-      subCategory: await this.subCategoryService.saveSubCategory(subCategory),
-      message: 'Status Changed',
-    };
+    let promises: Promise<any>[] = [];
+    promises.push(this.subCategoryService.saveSubCategory(subCategory));
+    promises = promises.concat(
+      subCategory.forums.map((forum: Forum) => {
+        const disabledForum: Forum = {
+          ...forum,
+          isActive: subCategory.isActive,
+        };
+        return this.forumService.saveForum(disabledForum);
+      }),
+    );
+    return Promise.all(promises).then(([savedSubCategory]) => {
+      return {
+        subCategory: savedSubCategory,
+        message: 'Status Changed',
+      };
+    });
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)

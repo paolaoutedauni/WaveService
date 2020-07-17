@@ -39,6 +39,15 @@ export class CategoryService {
       .getMany();
   }
 
+  findOneWithSubcategoriesAndForumsAdmin(id: number): Promise<Category> {
+    return this.categoriesRepository
+      .createQueryBuilder('category')
+      .innerJoinAndSelect('category.subCategories', 'subCategory')
+      .innerJoinAndSelect('subCategory.forums', 'forums')
+      .where('id = :id', { id: id })
+      .getOne();
+  }
+
   findAllWithContent(): Promise<Category[]> {
     return this.categoriesRepository.find({
       relations: ['subCategories', 'contentCategories'],

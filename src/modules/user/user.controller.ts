@@ -29,6 +29,7 @@ import { TokenExpiredError } from 'jsonwebtoken';
 import { userRole } from '../../helpers/constants';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
+import { EditUserDto } from 'src/dto/editUser.dto';
 @Controller('user')
 export class UserController {
   constructor(
@@ -173,14 +174,6 @@ export class UserController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('current')
-  async getCurrentUser(@Request() { user }: { user: User }) {
-    return {
-      user: user,
-    };
-  }
-
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(userRole.SUPER_ADMIN)
   @Post('register/Admin')
@@ -218,6 +211,23 @@ export class UserController {
       image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
     });
     const userCreated = await this.userService.createUser(newUser);
+    delete userCreated.password;
+    return { user: userCreated };
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
+  @Patch('/profile/edit')
+  async editProfile(
+    @Request() { user }: { user: User },
+    @Body() body: EditUserDto,
+  ) {
+    const editUser: User = {
+      ...user,
+      ...body,
+      birthday: body.birthday ? new Date(body.birthday) : user.birthday,
+    };
+    const userCreated = await this.userService.createUser(editUser);
     delete userCreated.password;
     return { user: userCreated };
   }
