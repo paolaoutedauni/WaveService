@@ -11,6 +11,7 @@ import {
   Query,
   Param,
   Patch,
+  Get,
 } from '@nestjs/common';
 import { sendEmail } from 'src/helpers/email.service';
 import { LoginDto } from 'src/dto/login.dto';
@@ -167,6 +168,14 @@ export class UserController {
     const newUser = await this.userService.findOne(user.email);
     return {
       user: newUser,
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('current')
+  async getCurrentUser(@Request() { user }: { user: User }) {
+    return {
+      user: user,
     };
   }
 
