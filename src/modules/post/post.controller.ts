@@ -101,7 +101,7 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   @Patch('like/:id')
   async likePost(@Param('id') id: number, @Request() { user }: { user: User }) {
     const post = await this.postService.findOne(id);
@@ -120,7 +120,7 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   @Patch('dislike/:id')
   async dislikePost(
     @Param('id') idPost: number,

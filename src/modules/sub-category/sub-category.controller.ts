@@ -54,7 +54,7 @@ export class SubCategoryController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   @Patch('add/favorite')
   async addAsFavorite(
     @Request() { user }: { user: User },
@@ -76,7 +76,7 @@ export class SubCategoryController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   @Patch('dislike/:id')
   async dislikeSubcategory(
     @Param('id') idSubcategory: number,

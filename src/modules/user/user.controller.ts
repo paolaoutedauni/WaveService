@@ -216,7 +216,12 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Roles(userRole.NORMAL, userRole.ADMIN, userRole.SUPER_ADMIN)
+  @Roles(
+    userRole.NORMAL,
+    userRole.PREMIUM,
+    userRole.ADMIN,
+    userRole.SUPER_ADMIN,
+  )
   @Get('current')
   async getCurrentUser(@Request() { user }: { user: User }) {
     return {
@@ -242,7 +247,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   @Patch('/profile/edit')
   async editUserName(
     @Request() { user }: { user: User },
