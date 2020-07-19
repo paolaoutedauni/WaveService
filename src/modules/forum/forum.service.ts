@@ -34,6 +34,7 @@ export class ForumService {
         });
       }
       return paginate<Forum>(this.forumsRepository, options, {
+        relations: ['subCategory'],
         where: {
           title: Like(`%${searchTerm}%`),
         },
@@ -47,7 +48,9 @@ export class ForumService {
           },
         });
       }
-      return paginate<Forum>(this.forumsRepository, options);
+      return paginate<Forum>(this.forumsRepository, options, {
+        relations: ['subCategory'],
+      });
     }
   }
 
