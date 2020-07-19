@@ -120,8 +120,11 @@ export class ForumController {
       forum.users = [user];
     }
     await this.forumService.saveForum(forum);
+    delete forum.users;
+    delete forum.subCategory;
     return {
       message: 'Like succeeded',
+      forum,
     };
   }
 
@@ -131,7 +134,9 @@ export class ForumController {
     @Param('id') idForum: number,
     @Request() { user }: { user: User },
   ) {
-    const forum = await this.forumService.findById(idForum);
+    const forum = await this.forumService.findByIdWithUsersAndSubcategory(
+      idForum,
+    );
     if (!forum) {
       throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
     }
@@ -139,8 +144,11 @@ export class ForumController {
       (userIn: User) => userIn.email !== user.email,
     );
     await this.forumService.saveForum(forum);
+    delete forum.users;
+    delete forum.subCategory;
     return {
       message: 'Dislike succeeded',
+      forum,
     };
   }
 
