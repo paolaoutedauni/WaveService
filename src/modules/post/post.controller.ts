@@ -19,6 +19,9 @@ import { PostDto } from 'src/dto/post.dto';
 import { UserService } from '../user/user.service';
 import { Post as PostEntity } from '../../../entities/post.entity';
 import { ForumService } from '../forum/forum.service';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/decorators/roles.decorator';
+import { userRole } from 'src/helpers/constants';
 
 @Controller('post')
 export class PostController {
@@ -97,7 +100,8 @@ export class PostController {
     return { message: 'Post guardado exitosamente' };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
   @Patch('like/:id')
   async likePost(@Param('id') id: number, @Request() { user }: { user: User }) {
     const post = await this.postService.findOne(id);
@@ -115,7 +119,8 @@ export class PostController {
     };
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
   @Patch('dislike/:id')
   async dislikePost(
     @Param('id') idPost: number,
