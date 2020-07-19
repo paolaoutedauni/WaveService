@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Forum } from 'entities/forum.entity';
-import { Repository, UpdateResult, Like, In } from 'typeorm';
+import { Repository, UpdateResult, Like, In, Not } from 'typeorm';
 import {
   paginate,
   Pagination,
@@ -60,10 +60,13 @@ export class ForumService {
     });
   }
 
-  findByIdWithUsersAndSubcategory(id: number): Promise<Forum> {
-    return this.forumsRepository.findOne(id, {
-      relations: ['subCategory', 'users'],
-    });
+  findByIdWithUsers(id: number): Promise<Forum> {
+    return this.forumsRepository
+      .createQueryBuilder('forum')
+      .leftJoinAndSelect('forum.users', 'user')
+      .loadRelationCountAndMap('forum.subscribers', 'forum.users')
+      .where('forum.id = :id', { id })
+      .getOne();
   }
 
   findById(id: number): Promise<Forum> {
@@ -73,14 +76,39 @@ export class ForumService {
   findByUserAndSubCategory(
     email: string,
     subCategoryId: number,
-  ): Promise<Forum[]> {
-    return this.forumsRepository
-      .createQueryBuilder('forum')
-      .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
+    options: IPaginationOptions,
+  ): Promise<Pagination<Forum>> {
+    const queryBuilder = this.forumsRepository.createQueryBuilder('forum');
+    queryBuilder
+      .innerJoin('forum.users', 'user', 'user.email IN (:userEmail)', {
         userEmail: email,
       })
-      .where('forum.subCategory = :subCategoryId', { subCategoryId })
-      .getMany();
+      .where('forum.subCategory = :subCategoryId', { subCategoryId });
+    return paginate<Forum>(queryBuilder, options);
+  }
+
+  findNotFavoriteByUserAndSubCategory(
+    subCategoryId,
+    user,
+    options: IPaginationOptions,
+  ): Promise<Pagination<Forum>> {
+    const queryBuilder = this.forumsRepository.createQueryBuilder('foro');
+    queryBuilder
+      .where('foro.subCategory = :subId', { subId: subCategoryId })
+      .andWhere(
+        qb => {
+          const subQuery = qb
+            .subQuery()
+            .select('foroUsers.users.email')
+            .from(Forum, 'foroUsers')
+            .innerJoin('foroUsers.users', 'users')
+            .where('foroUsers.id = foro.id')
+            .getQuery();
+          return `:userEmail NOT IN ${subQuery}`;
+        },
+        { userEmail: user.email },
+      );
+    return paginate<Forum>(queryBuilder, options);
   }
 
   findByUser(email: string): Promise<Forum[]> {

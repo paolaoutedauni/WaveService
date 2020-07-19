@@ -27,6 +27,7 @@ import { CreateAdminForumDto } from 'src/dto/createForumAdmin.dto';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { userRole } from 'src/helpers/constants';
+import { listenerCount } from 'process';
 
 @Controller('forum')
 export class ForumController {
@@ -79,9 +80,33 @@ export class ForumController {
   async findByUserAndSubCategory(
     @Request() { user }: { user: User },
     @Param('id') id,
+    @Query('pageFavorites') pageFavorites = 1,
+    @Query('pageNotFavorites') pageNotFavorites = 1,
+    @Query('limit') limit = 100,
   ) {
+    limit = limit > 100 ? 100 : limit;
+    const subscribeForums = await this.forumService.findByUserAndSubCategory(
+      user.email,
+      id,
+      {
+        page: pageFavorites,
+        limit,
+      },
+    );
+
+    const forumsNotSubscribe = await this.forumService.findNotFavoriteByUserAndSubCategory(
+      id,
+      user,
+      {
+        page: pageNotFavorites,
+        limit,
+      },
+    );
+
+    console.log(forumsNotSubscribe);
     return {
-      forums: await this.forumService.findByUserAndSubCategory(user.email, id),
+      favoriteForums: subscribeForums,
+      notFavoriteForums: forumsNotSubscribe,
     };
   }
 
@@ -110,12 +135,12 @@ export class ForumController {
   @UseGuards(AuthGuard('jwt'))
   @Patch('like/:id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   async likeForum(
     @Param('id') id: number,
     @Request() { user }: { user: User },
   ) {
-    const forum = await this.forumService.findByIdWithUsersAndSubcategory(id);
+    let forum = await this.forumService.findByIdWithUsers(id);
     if (!forum) {
       throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
     }
@@ -125,8 +150,8 @@ export class ForumController {
       forum.users = [user];
     }
     await this.forumService.saveForum(forum);
+    forum = await this.forumService.findByIdWithUsers(id);
     delete forum.users;
-    delete forum.subCategory;
     return {
       message: 'Like succeeded',
       forum,
@@ -136,14 +161,12 @@ export class ForumController {
   @UseGuards(AuthGuard('jwt'))
   @Patch('dislike/:id')
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles(userRole.NORMAL)
+  @Roles(userRole.NORMAL, userRole.PREMIUM)
   async dislikeForum(
     @Param('id') idForum: number,
     @Request() { user }: { user: User },
   ) {
-    const forum = await this.forumService.findByIdWithUsersAndSubcategory(
-      idForum,
-    );
+    let forum = await this.forumService.findByIdWithUsers(idForum);
     if (!forum) {
       throw new HttpException('El foro no existe', HttpStatus.NOT_FOUND);
     }
@@ -151,8 +174,8 @@ export class ForumController {
       (userIn: User) => userIn.email !== user.email,
     );
     await this.forumService.saveForum(forum);
+    forum = await this.forumService.findByIdWithUsers(idForum);
     delete forum.users;
-    delete forum.subCategory;
     return {
       message: 'Dislike succeeded',
       forum,
@@ -169,12 +192,13 @@ export class ForumController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async findById(@Param('id') id: number) {
-    const forum = await this.forumService.findByIdWithUsersAndSubcategory(id);
-    forum.users = forum.users.map(user => {
-      delete user.password;
-      return user;
-    });
+  async findById(@Param('id') id: number, @Request() { user }: { user: User }) {
+    let forum: any = await this.forumService.findByIdWithUsers(id);
+    forum = {
+      ...forum,
+      isLiked: forum.users.some(userToFind => userToFind.email === user.email),
+    };
+    delete forum.users;
     return { forum };
   }
 

@@ -136,23 +136,6 @@ export class SubCategoryController {
     return { imageUrl: response.data.data.url };
   }
 
-  /*
-  @Post('photo/upload/:id')
-  @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file, @Param('id') id: number) {
-    try {
-      const response = await this.uploadImageService.uploadImage(
-        file.buffer.toString('base64'),
-      );
-      await this.subCategoryService.savePhoto(id, response.data.data.url);
-      return { imageUrl: response.data.data.url };
-    } catch (error) {
-      console.log(error);
-      return { imageUrl: 'error' };
-    }
-  }
-*/
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Patch('change/status/:id')
   @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
@@ -212,7 +195,16 @@ export class SubCategoryController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async findById(@Param('id') id: number) {
-    return await this.subCategoryService.findById(id);
+  async findById(@Param('id') id: number, @Request() { user }: { user: User }) {
+    let subcategory: any = await this.subCategoryService.findById(id);
+    subcategory = {
+      ...subcategory,
+      isLiked: subcategory.users.some(
+        userToFind => userToFind.email === user.email,
+      ),
+    };
+    delete subcategory.users;
+    delete subcategory.category;
+    return { subcategory };
   }
 }
