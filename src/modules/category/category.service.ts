@@ -44,7 +44,7 @@ export class CategoryService {
       .createQueryBuilder('category')
       .innerJoinAndSelect('category.subCategories', 'subCategory')
       .innerJoinAndSelect('subCategory.forums', 'forums')
-      .where('id = :id', { id: id })
+      .where('category.id = :id', { id: id })
       .getOne();
   }
 

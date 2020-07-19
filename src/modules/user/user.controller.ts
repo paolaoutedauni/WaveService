@@ -30,6 +30,7 @@ import { userRole } from '../../helpers/constants';
 import { RolesGuard } from 'src/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
 import { EditUserDto } from 'src/dto/editUser.dto';
+import { EditUserNameDto } from 'src/dto/editUserName.dto';
 @Controller('user')
 export class UserController {
   constructor(
@@ -191,7 +192,6 @@ export class UserController {
         HttpStatus.NOT_FOUND,
       );
     }
-    console.log(admin);
     const foundUser = await this.userService.findByEmailOrUsername(
       body.email,
       body.userName,
@@ -215,6 +215,15 @@ export class UserController {
     return { user: userCreated };
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Roles(userRole.NORMAL, userRole.ADMIN, userRole.SUPER_ADMIN)
+  @Get('current')
+  async getCurrentUser(@Request() { user }: { user: User }) {
+    return {
+      user: user,
+    };
+  }
+
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   @Patch('/profile/edit')
@@ -226,6 +235,22 @@ export class UserController {
       ...user,
       ...body,
       birthday: body.birthday ? new Date(body.birthday) : user.birthday,
+    };
+    const userCreated = await this.userService.createUser(editUser);
+    delete userCreated.password;
+    return { user: userCreated };
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.NORMAL)
+  @Patch('/profile/edit')
+  async editUserName(
+    @Request() { user }: { user: User },
+    @Body() body: EditUserNameDto,
+  ) {
+    const editUser: User = {
+      ...user,
+      userName: body.userName,
     };
     const userCreated = await this.userService.createUser(editUser);
     delete userCreated.password;
