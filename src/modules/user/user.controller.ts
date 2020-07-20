@@ -99,7 +99,7 @@ export class UserController {
       });
       if (user) {
         user.password = encryptedPass;
-        await this.userService.createUser(user);
+        await this.userService.saveUser(user);
         delete user.password;
         return {
           accessToken: this.jwtService.sign({
@@ -153,7 +153,7 @@ export class UserController {
         HttpStatus.FOUND,
       );
     } else {
-      const userCreated = await this.userService.createUser(user);
+      const userCreated = await this.userService.saveUser(user);
       delete userCreated.password;
       return {
         accessToken: this.jwtService.sign({
@@ -210,7 +210,7 @@ export class UserController {
       role: userRole.ADMIN,
       image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
     });
-    const userCreated = await this.userService.createUser(newUser);
+    const userCreated = await this.userService.saveUser(newUser);
     delete userCreated.password;
     return { user: userCreated };
   }
@@ -231,33 +231,108 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
-  @Patch('/profile/edit')
-  async editProfile(
-    @Request() { user }: { user: User },
-    @Body() body: EditUserDto,
-  ) {
-    const editUser: User = {
-      ...user,
-      ...body,
-      birthday: body.birthday ? new Date(body.birthday) : user.birthday,
+  @Get('admin/readNormalUsers')
+  async getNormalUsers(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    const users = await this.userService.findAllByRoleNormal({
+      page,
+      limit,
+    });
+    return {
+      users,
     };
-    const userCreated = await this.userService.createUser(editUser);
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
+  @Get('admin/readAdminUsers')
+  async getAdminUsers(@Query('page') page = 1, @Query('limit') limit = 10) {
+    limit = limit > 100 ? 100 : limit;
+    const admins = await this.userService.findAllByRoleAdmin({
+      page,
+      limit,
+    });
+    return {
+      admins,
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
+  @Patch('admin/activate/normal')
+  async activateOrDesactivateUsers(@Body() body: EditUserDto) {
+    const userToChange = await this.userService.findByEmailOrUsername(
+      body.email,
+      body.userName,
+    );
+    if (!userToChange) {
+      throw new HttpException(
+        'El email o username no existe',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (userToChange.role === 'admin' || userToChange.role === 'superadmin') {
+      throw new HttpException(
+        'No tiene permisos para activar o desactivar administradores',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    userToChange.isActive = !userToChange.isActive;
+    const userCreated = await this.userService.saveUser(userToChange);
+    delete userCreated.password;
+    return { user: userCreated };
+  }
+
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(userRole.SUPER_ADMIN)
+  @Patch('superadmin/activate/admin')
+  async activateOrDesactivateAdmins(@Body() body: EditUserDto) {
+    const userToChange = await this.userService.findByEmailOrUsername(
+      body.email,
+      body.userName,
+    );
+    if (!userToChange) {
+      throw new HttpException(
+        'El email o username no existe',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (userToChange.role === 'superadmin') {
+      throw new HttpException(
+        'No tiene permisos para activar o desactivar super administradores',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    userToChange.isActive = !userToChange.isActive;
+    const userCreated = await this.userService.saveUser(userToChange);
     delete userCreated.password;
     return { user: userCreated };
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(userRole.NORMAL, userRole.PREMIUM)
-  @Patch('/profile/edit')
+  @Patch('profile/edit')
   async editUserName(
     @Request() { user }: { user: User },
     @Body() body: EditUserNameDto,
   ) {
-    const editUser: User = {
-      ...user,
+    let userToChange = await this.userService.findByEmailOrUsername(
+      user.email,
+      body.userName,
+    );
+    if (!userToChange) {
+      throw new HttpException(
+        'El email o username no existe',
+        HttpStatus.FOUND,
+      );
+    }
+    userToChange = {
+      ...userToChange,
       userName: body.userName,
+      firstName: body.firstName,
+      lastName: body.lastName,
     };
-    const userCreated = await this.userService.createUser(editUser);
+    const userCreated = await this.userService.saveUser(userToChange);
     delete userCreated.password;
     return { user: userCreated };
   }

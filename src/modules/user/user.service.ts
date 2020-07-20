@@ -3,9 +3,14 @@ import { User } from 'entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ObjectID, UpdateResult } from 'typeorm';
 import axios, { AxiosResponse } from 'axios';
-import { userRole } from "../../helpers/constants";
+import { userRole } from '../../helpers/constants';
 
 import FormData = require('form-data');
+import {
+  Pagination,
+  IPaginationOptions,
+  paginate,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class UserService {
@@ -16,6 +21,36 @@ export class UserService {
 
   findAll(): Promise<User[]> {
     return this.usersRepository.find();
+  }
+
+  findAllByRoleNormal(options: IPaginationOptions): Promise<Pagination<User>> {
+    return paginate<User>(this.usersRepository, options, {
+      select: [
+        'firstName',
+        'lastName',
+        'email',
+        'birthday',
+        'userName',
+        'role',
+        'isActive',
+      ],
+      where: [{ role: userRole.NORMAL }, { role: userRole.PREMIUM }],
+    });
+  }
+
+  findAllByRoleAdmin(options: IPaginationOptions): Promise<Pagination<User>> {
+    return paginate<User>(this.usersRepository, options, {
+      select: [
+        'firstName',
+        'lastName',
+        'email',
+        'birthday',
+        'userName',
+        'role',
+        'isActive',
+      ],
+      where: [{ role: userRole.ADMIN }, { role: userRole.SUPER_ADMIN }],
+    });
   }
 
   findOne(email: string): Promise<User> {
@@ -36,7 +71,7 @@ export class UserService {
     return this.usersRepository.findOne({ where: [{ email }, { userName }] });
   }
 
-  createUser(userRegister: User): Promise<User> {
+  saveUser(userRegister: User): Promise<User> {
     return this.usersRepository.save(userRegister);
   }
 
@@ -56,9 +91,9 @@ export class UserService {
       .createQueryBuilder()
       .update(User)
       .set({
-        role: userRole.PREMIUM
+        role: userRole.PREMIUM,
       })
       .where('email = :email', { email: email })
-      .execute()
+      .execute();
   }
 }
