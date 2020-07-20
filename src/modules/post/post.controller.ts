@@ -65,6 +65,7 @@ export class PostController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Roles(userRole.ADMIN, userRole.SUPER_ADMIN)
   @Get('admin/all/forum/:id')
   async findByForumIdForAdmin(
     @Param('id') idForum: number,
