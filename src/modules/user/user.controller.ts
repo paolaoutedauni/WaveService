@@ -182,16 +182,6 @@ export class UserController {
     @Request() { user }: { user: User },
     @Body() body: RegisterDto,
   ) {
-    const admin = await this.userService.findByEmailOrUsername(
-      user.email,
-      user.userName,
-    );
-    if (admin.role != userRole.ADMIN) {
-      throw new HttpException(
-        'El usuario no tiene permisos necesarios',
-        HttpStatus.NOT_FOUND,
-      );
-    }
     const foundUser = await this.userService.findByEmailOrUsername(
       body.email,
       body.userName,
