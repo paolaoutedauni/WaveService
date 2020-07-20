@@ -67,6 +67,7 @@ export class ForumService {
     return this.forumsRepository
       .createQueryBuilder('forum')
       .leftJoinAndSelect('forum.users', 'user')
+      .innerJoinAndSelect('forum.subCategory', 'subCategory')
       .loadRelationCountAndMap('forum.subscribers', 'forum.users')
       .where('forum.id = :id', { id })
       .getOne();
