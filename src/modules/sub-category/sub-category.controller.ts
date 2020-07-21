@@ -160,6 +160,8 @@ export class SubCategoryController {
       }),
     );
     return Promise.all(promises).then(([savedSubCategory]) => {
+      delete savedSubCategory.users;
+      delete savedSubCategory.forums;
       return {
         subCategory: savedSubCategory,
         message: 'Status Changed',

@@ -234,6 +234,8 @@ export class ForumController {
         user: user,
       });
       const savedForum = await this.forumService.saveForum(forum);
+      delete savedForum.user;
+      delete savedForum.subCategory;
       return { message: 'Foro creado exitosamente', forum: savedForum };
     }
   }
@@ -293,10 +295,13 @@ export class ForumController {
     if (exist) {
       throw new HttpException('El foro ya existe', HttpStatus.FOUND);
     }
-    const forum = new Forum({ ...body, subCategory: subCate, user: user });
+    let forum = new Forum({ ...body, subCategory: subCate, user: user });
+    forum = await this.forumService.saveForum(forum);
+    delete forum.user;
+    delete forum.subCategory;
     return {
-      forum: await this.forumService.saveForum(forum),
       message: 'El foro ha sido creado Satisfactoriamente',
+      forum,
     };
   }
 }

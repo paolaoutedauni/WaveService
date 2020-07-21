@@ -127,7 +127,7 @@ export class ForumService {
   findByUserWithPostsSubscribe(email: string): Promise<Forum[]> {
     return this.forumsRepository
       .createQueryBuilder('forum')
-      .innerJoinAndSelect('forum.users', 'user', 'user.email IN (:userEmail)', {
+      .innerJoin('forum.users', 'user', 'user.email IN (:userEmail)', {
         userEmail: email,
       })
       .leftJoinAndSelect(
