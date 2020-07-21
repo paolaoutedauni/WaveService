@@ -71,6 +71,13 @@ export class UserService {
     return this.usersRepository.findOne({ where: [{ email }, { userName }] });
   }
 
+  findyByForum(forumId: number): Promise<User[]> {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .innerJoin('user.forums', 'forum', 'forum.id = : forumId', { forumId })
+      .getMany();
+  }
+
   saveUser(userRegister: User): Promise<User> {
     return this.usersRepository.save(userRegister);
   }
