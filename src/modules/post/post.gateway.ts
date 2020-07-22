@@ -73,7 +73,7 @@ export class PostGateway {
           },
           actions: [
             {
-              action: 'explore',
+              action: `https://waveapp-f4960.firebaseapp.com/foro/${post.forum.id}`,
               title: 'Go to the site',
             },
           ],
