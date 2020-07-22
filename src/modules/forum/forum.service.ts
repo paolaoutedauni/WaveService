@@ -92,30 +92,10 @@ export class ForumService {
   }
 
   findNotFavoriteByUserAndSubCategory(
-    subCategoryId,
-    user,
+    subCategoryId: number,
+    user: User,
     options: IPaginationOptions,
   ): Promise<Pagination<Forum>> {
-    const queryBuilder = this.forumsRepository.createQueryBuilder('foro');
-    queryBuilder
-      .where('foro.subCategory = :subId', { subId: subCategoryId })
-      .andWhere(
-        qb => {
-          const subQuery = qb
-            .subQuery()
-            .select('foroUsers.users.email')
-            .from(Forum, 'foroUsers')
-            .innerJoin('foroUsers.users', 'users')
-            .where('foroUsers.id = foro.id')
-            .getQuery();
-          return `:userEmail NOT IN ${subQuery}`;
-        },
-        { userEmail: user.email },
-      );
-    return paginate<Forum>(queryBuilder, options);
-  }
-
-  findPrueba(subCategoryId: number, user: User): Promise<Forum[]> {
     const foroQb = this.forumsRepository
       .createQueryBuilder('foro')
       .select('foro.id')
@@ -124,12 +104,13 @@ export class ForumService {
         userEmail: user.email,
       });
 
-    return this.forumsRepository
-      .createQueryBuilder('foroNot')
+    const queryBuilder = this.forumsRepository.createQueryBuilder('foroNot');
+    queryBuilder
       .where('foroNot.subCategory = :subCategoryId', { subCategoryId })
       .andWhere('foroNot.id NOT IN (' + foroQb.getQuery() + ')')
       .setParameters(foroQb.getParameters())
       .getMany();
+    return paginate<Forum>(queryBuilder, options);
   }
 
   findByUser(email: string): Promise<Forum[]> {
