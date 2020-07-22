@@ -55,7 +55,9 @@ export class PostGateway {
 
   async sentPushNotifications(post: PostEntity) {
     try {
-      const users = await this.userService.findyByForum(post.forum.id);
+      const users = (
+        await this.forumService.findByIdWithUsers(post.forum.id)
+      ).users.filter(user => user.email !== post.user.email);
       let subscribers: any = await this.subscriberService.getSubscribersByUsers(
         users.map(user => user.email),
       );
