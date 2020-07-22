@@ -65,7 +65,7 @@ export class PostGateway {
         notification: {
           title: 'New post',
           body: post.text,
-          icon: '',
+          icon: 'src/assets/logo.png',
           vibrate: [100, 50, 100],
           data: {
             dateOfArrival: Date.now(),
