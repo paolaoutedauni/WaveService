@@ -115,6 +115,23 @@ export class ForumService {
     return paginate<Forum>(queryBuilder, options);
   }
 
+  findPrueba(subCategoryId: number, user: User): Promise<Forum[]> {
+    const foroQb = this.forumsRepository
+      .createQueryBuilder('foro')
+      .select('foro.id')
+      .where('foro.subCategory = :subCategoryId', { subCategoryId })
+      .innerJoin('foro.users', 'user', 'user.email IN (:userEmail)', {
+        userEmail: user.email,
+      });
+
+    return this.forumsRepository
+      .createQueryBuilder('foroNot')
+      .where('foroNot.subCategory = :subCategoryId', { subCategoryId })
+      .andWhere('foroNot.id NOT IN (' + foroQb.getQuery() + ')')
+      .setParameters(foroQb.getParameters())
+      .getMany();
+  }
+
   findByUser(email: string): Promise<Forum[]> {
     return this.forumsRepository
       .createQueryBuilder('forum')

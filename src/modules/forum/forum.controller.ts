@@ -119,6 +119,14 @@ export class ForumController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('prueba/:id')
+  async prueba(@Request() { user }: { user: User }, @Param('id') id) {
+    return {
+      forums: await this.forumService.findPrueba(id, user),
+    };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get('user/notSubscribe/posts')
   async findByUserWithPostNotSubscribe(@Request() { user }: { user: User }) {
     const allForums = await this.forumService.findAllWithPostByUser(user);
