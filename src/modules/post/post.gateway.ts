@@ -58,18 +58,14 @@ export class PostGateway {
       const users = (
         await this.forumService.findByIdWithUsers(post.forum.id)
       ).users.filter(user => user.email !== post.user.email);
-      console.log(users);
-      console.log(post.user);
       let subscribers: any = await this.subscriberService.getSubscribersByUsers(
         users.map(user => user.email),
       );
-      console.log(subscribers);
       const notificationPayload = {
         notification: {
           title: `New post on ${post.forum.title}`,
           body: ` ${post.user.userName}: ${post.text}`,
-          icon:
-            'https://cdn.dribbble.com/users/60166/screenshots/4647753/wave_logo_dribbble.jpg',
+          icon: 'https://i.ibb.co/8NHQJ4L/logo.png',
           vibrate: [100, 50, 100],
           data: {
             dateOfArrival: Date.now(),
