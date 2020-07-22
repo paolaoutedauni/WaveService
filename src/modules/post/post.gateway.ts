@@ -70,11 +70,12 @@ export class PostGateway {
           data: {
             dateOfArrival: Date.now(),
             primaryKey: 1,
+            foro: post.forum.id,
           },
           actions: [
             {
-              action: `https://waveapp-f4960.firebaseapp.com/foro/${post.forum.id}`,
-              title: 'Go to the site',
+              action: `REDIRECT`,
+              title: 'Go to the forum',
             },
           ],
         },
