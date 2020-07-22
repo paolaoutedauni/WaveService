@@ -63,9 +63,9 @@ export class PostGateway {
       );
       const notificationPayload = {
         notification: {
-          title: 'New post',
-          body: post.text,
-          icon: 'src/assets/logo.png',
+          title: `New post on ${post.forum.title}`,
+          body: ` ${post.user.userName}: ${post.text}`,
+          icon: 'assets/logo.png',
           vibrate: [100, 50, 100],
           data: {
             dateOfArrival: Date.now(),
