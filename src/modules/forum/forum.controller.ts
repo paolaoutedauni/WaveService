@@ -229,6 +229,7 @@ export class ForumController {
       );
     } else {
       const forum: Forum = new Forum({
+        image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
         ...body,
         subCategory: subCate,
         user: user,
