@@ -47,8 +47,11 @@ export class UserController {
       password: encryptedPass,
     });
     if (user) {
-      if(!user.isActive){
-        throw new HttpException('La cuenta de este usuario se ha desactivado', HttpStatus.FORBIDDEN);
+      if (!user.isActive) {
+        throw new HttpException(
+          'La cuenta de este usuario se ha desactivado',
+          HttpStatus.FORBIDDEN,
+        );
       }
       delete user.password;
       return {
@@ -142,9 +145,9 @@ export class UserController {
     const encryptedPass = sha1(body.password);
     body.password = encryptedPass;
     const user: User = new User({
+      image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
       ...body,
       birthday: new Date(body.birthday),
-      image: 'https://i.ibb.co/XFrKdNG/4a8bc11da4eb.jpg',
     });
     const foundUser = await this.userService.findByEmailOrUsername(
       body.email,
