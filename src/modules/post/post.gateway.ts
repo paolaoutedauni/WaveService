@@ -55,24 +55,27 @@ export class PostGateway {
 
   async sentPushNotifications(post: PostEntity) {
     try {
-      const users = await this.userService.findyByForum(post.forum.id);
+      const users = (
+        await this.forumService.findByIdWithUsers(post.forum.id)
+      ).users.filter(user => user.email !== post.user.email);
       let subscribers: any = await this.subscriberService.getSubscribersByUsers(
         users.map(user => user.email),
       );
       const notificationPayload = {
         notification: {
-          title: 'New post',
-          body: post.text,
-          icon: '',
+          title: `New post on ${post.forum.title}`,
+          body: ` ${post.user.userName}: ${post.text}`,
+          icon: 'https://i.ibb.co/8NHQJ4L/logo.png',
           vibrate: [100, 50, 100],
           data: {
             dateOfArrival: Date.now(),
             primaryKey: 1,
+            foro: post.forum.id,
           },
           actions: [
             {
-              action: 'explore',
-              title: 'Go to the site',
+              action: `REDIRECT`,
+              title: 'Go to the forum',
             },
           ],
         },
