@@ -47,6 +47,9 @@ export class UserController {
       password: encryptedPass,
     });
     if (user) {
+      if(!user.isActive){
+        throw new HttpException('La cuenta de este usuario se ha desactivado', HttpStatus.FORBIDDEN);
+      }
       delete user.password;
       return {
         accessToken: this.jwtService.sign({
@@ -56,7 +59,7 @@ export class UserController {
         user,
       };
     } else {
-      throw new HttpException('Este usuario no existe', HttpStatus.NOT_FOUND);
+      throw new HttpException('Clave o correo inválidas', HttpStatus.NOT_FOUND);
     }
   }
 
