@@ -52,7 +52,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
     "socket.io": "^2.3.0",
-    "typeorm": "^0.2.24",
+    "typeorm": "^0.2.25",
     "web-push": "^3.4.4"
   },
   "devDependencies": {
